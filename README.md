@@ -1,2 +1,2 @@
 # rating-system
-Ranking and predicting based on rating
+ranking and predicting based on rating
