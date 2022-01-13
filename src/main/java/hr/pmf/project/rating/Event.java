@@ -29,7 +29,7 @@ public class Event {
         for(Player player : players){
             diffuse(player);
             player.setDelta(Math.sqrt(Math.pow(BETA, 2) + Math.pow(player.getDeviation(), 2)));
-            update(player);
+            /*update(player);*/
         }
     }
     
@@ -51,7 +51,7 @@ public class Event {
         /* updateDatabase^ */
     }
     
-    public void update(Player player){
+  /*  public void update(Player player){
         double p = firstSolveZero(player);
         player.m_list.add(p);
         player.d_list.add(1 / Math.sqrt(BETA));
@@ -59,16 +59,16 @@ public class Event {
         /* updateDatabase^ */
     }
     
-    public double firstSolveZero(Player player){
+    /*public double firstSolveZero(Player player){
         /* https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.newton.html */
-        return solution
-    }
+  /*      return solution
+/*    }
     
     public double secondSolveZero(Player player){
         /* https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.newton.html */
-        return solution
+    /*    return solution
     }
                 
              
-    
-}
+  */  
+/*}*/
