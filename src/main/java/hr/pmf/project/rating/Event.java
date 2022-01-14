@@ -25,13 +25,13 @@ public class Event {
         return players;
     }
     
-    public void calculate(){
+    /*public void calculate(){
         for(Player player : players){
             diffuse(player);
             player.setDelta(Math.sqrt(Math.pow(BETA, 2) + Math.pow(player.getDeviation(), 2)));
             update(player);
         }
-    }
+    }*/
     
     public void diffuse(Player player){
         double k = 1 / (1 + Math.pow(GAMMA, 2) / Math.pow(player.getDeviation(), 2));
@@ -51,23 +51,23 @@ public class Event {
         /* updateDatabase^ */
     }
     
-    public void update(Player player){
+   /* public void update(Player player){
         double p = firstSolveZero(player);
         player.m_list.add(p);
         player.d_list.add(1 / Math.sqrt(BETA));
         double new_mean = secondSolveZero(player);
-        /* updateDatabase^ */
-    }
+         updateDatabase^ 
+    }*/
     
-    public double firstSolveZero(Player player){
-        /* https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.newton.html */
+    /*public double firstSolveZero(Player player){
+         https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.newton.html 
         return solution
-    }
+    }*/
     
-    public double secondSolveZero(Player player){
-        /* https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.newton.html */
+   /* public double secondSolveZero(Player player){
+         https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.newton.html 
         return solution
-    }
+    }*/
                 
              
     
