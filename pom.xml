@@ -16,7 +16,28 @@
             <artifactId>sqlite-jdbc</artifactId>
             <version>3.7.2</version>
         </dependency>    
+    		<dependency>
+			<groupId>org.javatuples</groupId>
+			<artifactId>javatuples</artifactId>
+			<version>1.2</version>
+			<scope>compile</scope>
+		</dependency>
     </dependencies>
+    <build>    
+        <plugins>
+            <plugin>
+                  <artifactId>maven-compiler-plugin</artifactId>
+                  <version>3.7.0</version>
+                  <configuration>
+                    <compilerArgs>
+                      <arg>-verbose</arg>
+                      <arg>-h</arg>
+                      <arg>.</arg>
+                    </compilerArgs>
+                  </configuration>
+            </plugin>   
+        </plugins>
+    </build>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>12</maven.compiler.source>
