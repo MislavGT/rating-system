@@ -10,20 +10,37 @@ public class Player{
     private final String id;
     private double mean;
     private double deviation;
-    private double delta;
     private final String name;
-    public ArrayList<Double> m_list;
-    public ArrayList<Double> d_list;
+    private ArrayList<Double> m_list;
+    private ArrayList<Double> d_list;
+    
+    private static String NEWID;
 
 
     public Player(String id, double mean, double deviation, String name,
-            ArrayList<Double> m_list, ArrayList<Double> d_list){
+                    ArrayList<Double> m_list, ArrayList<Double> d_list){
         this.id = id;
         this.mean = mean;
         this.deviation = deviation;
         this.name = name;
         this.m_list = m_list;
         this.d_list = d_list;
+    }
+    
+    public ArrayList<Double> getM(){
+        return m_list;
+    }
+
+    public ArrayList<Double> getD(){
+        return d_list;
+    }
+    
+    public void addM(double x){
+        m_list.add(x);
+    }
+    
+    public void addD(double x){
+        d_list.add(x);
     }
 
     public String getId(){
@@ -44,14 +61,6 @@ public class Player{
     
     public void setDeviation(double deviation){
         this.deviation = deviation;
-    }
-    
-    public double getDelta(){
-        return delta;
-    }
-    
-    public void setDelta(double delta){
-        this.delta = delta;
     }
     
     public String getName(){
