@@ -3,13 +3,14 @@ package hr.pmf.project.rating;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Random;
 
 
 public class Player{
 
     private final String id;
     private double mean;
-    private double deviation;
+    private double sigma;
     private final String name;
     private ArrayList<Double> m_list;
     private ArrayList<Double> d_list;
@@ -17,11 +18,11 @@ public class Player{
     private static String NEWID;
 
 
-    public Player(String id, double mean, double deviation, String name,
+    public Player(String id, double mean, double sigma, String name,
                     ArrayList<Double> m_list, ArrayList<Double> d_list){
         this.id = id;
         this.mean = mean;
-        this.deviation = deviation;
+        this.sigma = sigma;
         this.name = name;
         this.m_list = m_list;
         this.d_list = d_list;
@@ -55,12 +56,12 @@ public class Player{
         this.mean = mean;
     }
     
-    public double getDeviation(){
-        return deviation;
+    public double getSigma(){
+        return sigma;
     }
     
-    public void setDeviation(double deviation){
-        this.deviation = deviation;
+    public void setSigma(double sigma){
+        this.sigma = sigma;
     }
     
     public String getName(){
@@ -84,4 +85,5 @@ public class Player{
         result = getId() != null ? getId().hashCode() : 0;
         return result;
     }
+    
 }
