@@ -154,7 +154,7 @@ public class Event {
                         Marko.getSigma() * Marko.getSigma()))));
         System.out.println(prob1);
         System.out.println(prob2);
-        System.out.println(prob3)
+        System.out.println(prob3);
         
     }
                 
