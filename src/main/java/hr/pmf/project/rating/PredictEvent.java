@@ -109,7 +109,6 @@ public class PredictEvent {
     }
     
     public static void main(String args[]){
-        System.out.println("tu sam");
         ArrayList<Player> testna = new ArrayList<>();
         ArrayList<Double> emp = new ArrayList<>();
         testna.add(new Player("001", 1500d, 10d, "Marko", emp, emp));
