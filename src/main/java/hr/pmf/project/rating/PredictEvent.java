@@ -37,10 +37,6 @@ public class PredictEvent {
         return rankovi;
     }
     
-    public void addPlayer(Player p){
-        players.add(p);
-    }
-    
     public void process(){
         ArrayList<ArrayList<Double>> scores = new ArrayList<>();
         for(int i = 0; i < nPlayers; i++){
@@ -85,15 +81,7 @@ public class PredictEvent {
                 rankings.get(player).set(j, c + 1);
             }
         }
-        /*
-        //provjera: za svakog igraca ispisem kolko puta je bio na kojoj poziciji
-        for(int i = 0; i < nPlayers; i++){
-            System.out.println("igrac = " + players.get(i).getName());
-            for(int j = 0; j < nPlayers; j++)
-              System.out.println("pos = " + (j + 1) + ": #" + rankings.get(i).get(j));
-        }
-        */
-        
+     
         //u postocima
         ArrayList<ArrayList<Double>> freq = new ArrayList<>();
         for(int i = 0; i < nPlayers; i++){
