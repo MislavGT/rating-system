@@ -17,6 +17,7 @@ import java.sql.ResultSet;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Collection;
+import org.javatuples.Pair;
 
 
 /**
@@ -39,22 +40,20 @@ public class JavaSqlite {
     second.add(1.8);
 
 
-    Player plyr = new Player("51",2,3, "Karl", first, second  );
-    ArrayList<Player> for_evt = new ArrayList<Player>();
-    for_evt.add(plyr);
+    Player plyr = new Player("59",2,3, "Dorian", first, second  );
+    ArrayList<Pair<Player,Integer>> for_evt = new ArrayList<Pair<Player,Integer>>();
+    for_evt.add(new Pair(plyr,10));
     Event evt = new Event(for_evt);
-    System.out.println("Prije");
     //app.InsertPlayer(plyr);
     //app.InsertEvent(evt);
     List<Event> events = app.SelectEvents("SELECT * FROM Event");
     for (Event element : events)
     {
-        for(Player item: element.getPlayers())
-            System.out.println(item.getName());
+        for(Pair<Player, Integer> item: element.getPlayers())
+            System.out.println(item.getValue0().getName());
 
     }
-    System.out.println("Poslije");
-
+    System.out.println("prije player");
     List<Player> players = app.SelectPlayers("SELECT * FROM Player");
     for (Player element : players)
         System.out.println(element.getName());
@@ -86,7 +85,7 @@ public class JavaSqlite {
                 ArrayList<Double> d_list = new ArrayList<>();
                 for(double d : d_l) d_list.add(d);
 
-                Player player = new Player(rs.getString("player_id"),rs.getDouble("mean"), rs.getDouble("deviation"),rs.getString("name"), m_list, d_list);
+                Player player = new Player(rs.getString("player_id"),rs.getDouble("mean"), rs.getDouble("sigma"),rs.getString("name"), m_list, d_list);
 
                 
                 players.add(player);
@@ -117,11 +116,13 @@ public class JavaSqlite {
                 Gson gson = builder.create();
                 
                 Player[] plyrs = gson.fromJson(rs.getString("players"), Player[].class);
-                ArrayList<Player> players = new ArrayList<Player>();
-                for(Player d : plyrs) players.add(d);
-                
-                Event event = new Event(players);
-                events.add(event);
+                int[] positions = gson.fromJson(rs.getString("place"), int[].class);
+                ArrayList<Pair<Player, Integer>> lista = new ArrayList<Pair<Player, Integer>>();
+                for(int i = 0; i < plyrs.length;i++)
+                {
+                    lista.add(new Pair(plyrs[i], positions[i]));
+                }
+                events.add(new Event(lista));
             }
         }
         catch(SQLException e)
@@ -141,7 +142,7 @@ public class JavaSqlite {
         {
             Gson gson = new Gson(); 
             stmt = conn.createStatement();
-            String sql = "INSERT INTO Player( name, mean, deviation,m_list, d_list) VALUES( '" + player.getName()+"', " + player.getMean() + ", " + player.getDeviation() + ", '" + gson.toJson(player.m_list) +"', '" + gson.toJson(player.d_list)+"');";
+            String sql = "INSERT INTO Player( name, mean, sigma, m_list, d_list) VALUES( '" + player.getName()+"', " + player.getMean() + ", "+player.getSigma()+", '" + gson.toJson(player.getM()) +"', '" + gson.toJson(player.getD())+"');";
             stmt.executeQuery(sql);
             
 
@@ -157,11 +158,20 @@ public class JavaSqlite {
     public void InsertEvent(Event event) throws ClassNotFoundException, SQLException
     {
         Statement stmt = null;
+        Player[] plyrs = new Player[event.getPlayers().size()];
+        int[] positions = new int[event.getPlayers().size()];
+        int i = 0;
+        for(Pair<Player,Integer> item : event.getPlayers())
+        {
+            plyrs[i] = item.getValue0();
+            positions[i] = item.getValue1();
+        }
         try(Connection conn = connect())
         {
             Gson gson = new Gson();
             stmt = conn.createStatement();
-            String sql = "INSERT INTO Event(players) VALUES('"+gson.toJson(event.getPlayers())+"');";
+            String sql = "INSERT INTO Event(players, place) VALUES('"+gson.toJson(plyrs)+"', '"+gson.toJson(positions)+"');";
+            System.out.println(sql );
             stmt.executeQuery(sql);
         }
         catch(SQLException e)
