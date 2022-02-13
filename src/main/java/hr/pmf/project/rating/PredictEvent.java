@@ -6,8 +6,13 @@ package hr.pmf.project.rating;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.atomic.AtomicIntegerArray;
 import org.apache.commons.math3.distribution.LogisticDistribution;
 import org.javatuples.Pair;
 
@@ -18,8 +23,10 @@ import org.javatuples.Pair;
 public class PredictEvent {
     final static int ITER_CNT = 10_000;
     final static int EPSILON = 30;
+    final static int THREAD_POOL_SIZE = 7;
     final int nPlayers;
     private ArrayList<Player> players = new ArrayList<>();
+    private ArrayList<AtomicIntegerArray> rankings = null;
     HashMap<String, ArrayList<Double>> rankovi = null;
     
     public PredictEvent(ArrayList<Player> players){
@@ -55,34 +62,35 @@ public class PredictEvent {
             scores.add(moja);
         }
         
-        ArrayList<ArrayList<Integer>> rankings = new ArrayList<>(); //matrica; (i, j) -> #i-ti igrac na mjestu j
+        rankings = new ArrayList<>(); //ovo je za visedretvenost
+      
         for(int i = 0; i < nPlayers; i++){
-            ArrayList<Integer> tmp = new ArrayList<>();
-            for(int j = 0; j < nPlayers; j++) tmp.add(0);
-            rankings.add(tmp);
+            int pomoc[] = new int[nPlayers];
+            for(int j = 0; j < nPlayers; j++) pomoc[j] = 0;
+            AtomicIntegerArray ubaci = new AtomicIntegerArray(pomoc);
+            rankings.add(ubaci);
         }
         
+        List<Future<Void>> zadaci = new ArrayList<>();
+        ExecutorService executorService = Executors.newFixedThreadPool(THREAD_POOL_SIZE);
         for(int game = 0; game < ITER_CNT; game++){
             ArrayList<Pair<Double, Integer>> al = new ArrayList<>();
             for(int j = 0; j < nPlayers; j++)
                 al.add(new Pair(scores.get(j).get(game), j));
-            al.sort(new Comparator<Pair<Double, Integer>>(){
-                @Override
-                public int compare(Pair<Double, Integer> p1, Pair<Double, Integer> p2) {
-                    if((double)p1.getValue0() > (double)p2.getValue0())
-                        return -1;
-                    if((double)p1.getValue0() == (double)p2.getValue0())
-                        return 0;
-                    return 1;
-                }
-            });
-            
-            for(int j = 0; j < nPlayers; j++){
-                int player = al.get(j).getValue1();
-                int c = rankings.get(player).get(j);
-                rankings.get(player).set(j, c + 1);
-            }
+            //ovdje paralelno
+            Future<Void> racunaj = executorService.submit(new CalculationJobPredict(al, rankings));
+            zadaci.add(racunaj);
         }
+        
+        zadaci.forEach((Future<Void> ft) -> {
+            try{
+                ft.get();
+            }catch(ExecutionException | InterruptedException e){
+                
+            }
+        });
+        
+        executorService.shutdown();
      
         //u postocima
         ArrayList<ArrayList<Double>> freq = new ArrayList<>();
@@ -93,9 +101,7 @@ public class PredictEvent {
             }
             freq.add(cur);
         }
-        
         this.setRankovi(freq);
-        
     }
     
     public static void main(String args[]){
