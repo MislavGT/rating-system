@@ -15,6 +15,8 @@ import org.javatuples.Pair;
  * @author jurica
  */
 public class CalculationJobPredict implements Callable<Void>{
+    final static int EPSILON = 1000;
+    
     ArrayList<Pair<Double, Integer>> al = null;
     ArrayList<AtomicIntegerArray> rankings = null;
     public CalculationJobPredict(ArrayList<Pair<Double, Integer>> al, ArrayList<AtomicIntegerArray> rankings){
@@ -36,6 +38,15 @@ public class CalculationJobPredict implements Callable<Void>{
             });
         
         int nPlayers = al.size();
+        
+        /* for(int k = 0; k < nPlayers - 1; k++){
+            if((al.get(k).getValue0() - al.get(k+1).getValue0()) < EPSILON){
+                Pair<Double, Integer> replacement = Pair.with
+                    (al.get(k+1).getValue0(), al.get(k).getValue1());
+                al.set(k+1, replacement);
+            }
+        } */
+        
         for(int j = 0; j < nPlayers; j++){
             int player = al.get(j).getValue1();
             rankings.get(player).getAndIncrement(j);

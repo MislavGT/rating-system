@@ -22,7 +22,6 @@ import org.javatuples.Pair;
  */
 public class PredictEvent {
     final static int ITER_CNT = 10_000;
-    final static int EPSILON = 30;
     final static int THREAD_POOL_SIZE = 7;
     final int nPlayers;
     private ArrayList<Player> players = new ArrayList<>();

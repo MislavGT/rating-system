@@ -4,6 +4,7 @@ package hr.pmf.project.rating;
 import java.util.ArrayList;
 import org.javatuples.Pair;
 import java.io.File;
+import java.util.function.Consumer;
 
 public class Event {
     
@@ -17,7 +18,7 @@ public class Event {
     public static final double GAMMA = 35;
     public static final double RHO = 1;
     public static final double SH = Math.sqrt(3) / Math.PI;
-    public static final double MAX_LENGTH = 10;
+    public static final double MAX_LENGTH = 1000;
     
     private final ArrayList<Pair<Player, Integer>> players;
     private final ArrayList<Double> deltas;
@@ -48,7 +49,7 @@ public class Event {
     }
     
     public void calculate(){
-        players.forEach(element1 -> {
+        players.forEach((Pair<Player, Integer> element1) -> {
             Player player1 = element1.getValue0();
             diffuse(player1);
             deltas.add(hyp(player1.getSigma(), BETA));
