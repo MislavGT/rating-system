@@ -7,6 +7,16 @@
     <packaging>jar</packaging>
     <dependencies>
         <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-controls</artifactId>
+            <version>13</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-fxml</artifactId>
+            <version>13</version>
+        </dependency>
+        <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
             <version>2.8.9</version>
@@ -28,7 +38,7 @@
             <version>3.6.1</version>
         </dependency>
     </dependencies>
-    <build>    
+    <build>
         <plugins>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -39,6 +49,14 @@
                         <arg>-h</arg>
                         <arg>.</arg>
                     </compilerArgs>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.openjfx</groupId>
+                <artifactId>javafx-maven-plugin</artifactId>
+                <version>0.0.8</version>
+                <configuration>
+                    <mainClass>hr.pmf.project.rating.NewHelloFX</mainClass>
                 </configuration>
             </plugin>   
         </plugins>
