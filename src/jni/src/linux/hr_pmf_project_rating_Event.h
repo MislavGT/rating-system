@@ -7,12 +7,6 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-#undef hr_pmf_project_rating_Event_BETA
-#define hr_pmf_project_rating_Event_BETA 200.0
-#undef hr_pmf_project_rating_Event_GAMMA
-#define hr_pmf_project_rating_Event_GAMMA 3.5
-#undef hr_pmf_project_rating_Event_RHO
-#define hr_pmf_project_rating_Event_RHO 0.5
 /*
  * Class:     hr_pmf_project_rating_Event
  * Method:    firstSolveZero

@@ -6,8 +6,13 @@ package hr.pmf.project.rating;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.atomic.AtomicIntegerArray;
 import org.apache.commons.math3.distribution.LogisticDistribution;
 import org.javatuples.Pair;
 
@@ -17,8 +22,10 @@ import org.javatuples.Pair;
  */
 public class PredictEvent {
     final static int ITER_CNT = 10_000;
+    final static int THREAD_POOL_SIZE = 7;
     final int nPlayers;
     private ArrayList<Player> players = new ArrayList<>();
+    private ArrayList<AtomicIntegerArray> rankings = null;
     HashMap<String, ArrayList<Double>> rankovi = null;
     
     public PredictEvent(ArrayList<Player> players){
@@ -42,7 +49,8 @@ public class PredictEvent {
         for(int i = 0; i < nPlayers; i++){
             //za svakog igraca uzmem 10_000 sampleova iz logisticke distribucije
             double curMean = players.get(i).getMean();
-            double curSigma = players.get(i).getSigma();
+            double curSigma = Event.hyp(players.get(i).getSigma(), Event.BETA) *
+                    Event.SH;
            
             LogisticDistribution ld = new LogisticDistribution(curMean, curSigma);
             double[] curSample = ld.sample(ITER_CNT);
@@ -53,34 +61,35 @@ public class PredictEvent {
             scores.add(moja);
         }
         
-        ArrayList<ArrayList<Integer>> rankings = new ArrayList<>(); //matrica; (i, j) -> #i-ti igrac na mjestu j
+        rankings = new ArrayList<>(); //ovo je za visedretvenost
+      
         for(int i = 0; i < nPlayers; i++){
-            ArrayList<Integer> tmp = new ArrayList<>();
-            for(int j = 0; j < nPlayers; j++) tmp.add(0);
-            rankings.add(tmp);
+            int pomoc[] = new int[nPlayers];
+            for(int j = 0; j < nPlayers; j++) pomoc[j] = 0;
+            AtomicIntegerArray ubaci = new AtomicIntegerArray(pomoc);
+            rankings.add(ubaci);
         }
         
+        List<Future<Void>> zadaci = new ArrayList<>();
+        ExecutorService executorService = Executors.newFixedThreadPool(THREAD_POOL_SIZE);
         for(int game = 0; game < ITER_CNT; game++){
             ArrayList<Pair<Double, Integer>> al = new ArrayList<>();
             for(int j = 0; j < nPlayers; j++)
                 al.add(new Pair(scores.get(j).get(game), j));
-            al.sort(new Comparator<Pair<Double, Integer>>(){
-                @Override
-                public int compare(Pair<Double, Integer> p1, Pair<Double, Integer> p2) {
-                    if((double)p1.getValue0() > (double)p2.getValue0())
-                        return -1;
-                    if((double)p1.getValue0() == (double)p2.getValue0())
-                        return 0;
-                    return 1;
-                }
-            });
-            
-            for(int j = 0; j < nPlayers; j++){
-                int player = al.get(j).getValue1();
-                int c = rankings.get(player).get(j);
-                rankings.get(player).set(j, c + 1);
-            }
+            //ovdje paralelno
+            Future<Void> racunaj = executorService.submit(new CalculationJobPredict(al, rankings));
+            zadaci.add(racunaj);
         }
+        
+        zadaci.forEach((Future<Void> ft) -> {
+            try{
+                ft.get();
+            }catch(ExecutionException | InterruptedException e){
+                
+            }
+        });
+        
+        executorService.shutdown();
      
         //u postocima
         ArrayList<ArrayList<Double>> freq = new ArrayList<>();
@@ -91,31 +100,29 @@ public class PredictEvent {
             }
             freq.add(cur);
         }
-        
         this.setRankovi(freq);
-        
     }
     
     public static void main(String args[]){
         ArrayList<Player> testna = new ArrayList<>();
         ArrayList<Double> emp = new ArrayList<>();
-        testna.add(new Player("001", 1500d, 10d, "Marko", emp, emp));
-        testna.add(new Player("002", 2100d, 15d, "Petar", emp, emp));
-        testna.add(new Player("003", 1212d, 12d, "Ivan", emp, emp));
-        testna.add(new Player("004", 1710d, 8d, "Luka", emp, emp));
-        testna.add(new Player("005", 1823d, 11d, "Pero", emp, emp));
-        testna.add(new Player("006", 1900d, 205d, "Stef", emp, emp));
-        testna.add(new Player("007", 1312d, 12.44d, "Andrija", emp, emp));
-        testna.add(new Player("008", 1500d, 12.12d, "Boris", emp, emp));
-        testna.add(new Player("009", 2400d, 22.23d, "Milan", emp, emp));
+        testna.add(new Player("001", 1652d, 128d, "Marko", emp, emp));
+        testna.add(new Player("002", 1348d, 128d, "Petar", emp, emp));
+        testna.add(new Player("003", 1212d, 35d, "Ivan", emp, emp));
+        testna.add(new Player("004", 1710d, 35d, "Luka", emp, emp));
+        testna.add(new Player("005", 1823d, 35d, "Pero", emp, emp));
+        testna.add(new Player("006", 1900d, 35d, "Stef", emp, emp));
+        testna.add(new Player("007", 1312d, 35d, "Andrija", emp, emp));
+        testna.add(new Player("008", 1500d, 35d, "Boris", emp, emp));
+        testna.add(new Player("009", 2400d, 35d, "Milan", emp, emp));
         PredictEvent novi = new PredictEvent(testna);
         novi.process();
         HashMap<String, ArrayList<Double>> predvidi = novi.getRankovi();
-        for(int i = 0; i < 9; i++){
+        for(int i = 0; i < testna.size(); i++){
             System.out.println("igrac: " + testna.get(i).getId());
             DecimalFormat df = new DecimalFormat();
             df.setMaximumFractionDigits(2);
-            for(int j = 0; j < 9; j++){
+            for(int j = 0; j < testna.size(); j++){
                 System.out.print(df.format((Double)(predvidi.get(testna.get(i).getId()).get(j) * 100.0)) + "% ");
             }
             System.out.println();

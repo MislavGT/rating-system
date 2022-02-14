@@ -15,9 +15,7 @@ public class Player{
     private ArrayList<Double> m_list;
     private ArrayList<Double> d_list;
     
-    private static String NEWID;
-
-
+    
     public Player(String id, double mean, double sigma, String name,
                     ArrayList<Double> m_list, ArrayList<Double> d_list){
         this.id = id;

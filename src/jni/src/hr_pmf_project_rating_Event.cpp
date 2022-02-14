@@ -1,5 +1,6 @@
-#define EPSILON 0.0000000001
+#define EPSILON 0.01
 #include <cmath>
+#include <cstdio>
 #include "hr_pmf_project_rating_Event.h"
 
 using namespace std;
@@ -13,11 +14,17 @@ double shorthand(double x){
 }
 
 double newtonMethod(double mean, double (*func)(double), double (*der)(double)){
+    int i = 0;
     double x = mean;
     double y = x - (func(x) / der(x));
-    while(abs(x - y) > EPSILON){
+    while(abs(x - y) > EPSILON && i < 10000){
         x = y;
         y = x - (func(x) / der(x));
+        i++;
+    }
+    if(i == 10000){
+        /* Possible Newton fail. */
+        printf("Newton");
     }
     return y;
 }
@@ -26,10 +33,10 @@ double firstFunction(double x){
     double sum = 0;
     for(int i = 0; i < length; i++){
         if(placement <= placements[i]){
-            sum += (tanh((x - priorMeans[i]) / (2 * shorthand(deltas[i])) - 1) / deltas[i]);
+            sum += (tanh((x - priorMeans[i]) / (2 * shorthand(deltas[i]))) - 1) / deltas[i];
         }
         if(placement >= placements[i]){
-            sum += (tanh((x - priorMeans[i]) / (2 * shorthand(deltas[i])) + 1) / deltas[i]);
+            sum += (tanh((x - priorMeans[i]) / (2 * shorthand(deltas[i]))) + 1) / deltas[i];
         }
     }
     return sum;
