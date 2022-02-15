@@ -183,7 +183,7 @@ public class CodeforcesParser {
         return ret;
     }
     
-    public static void makeEvents(){
+    public static List<Event> makeEvents(){
         List<Event> eventi = new ArrayList<>();
         for(int i = 0; i < KRAJ - POCETAK + 1; i++)
             eventi.add(new Event(new ArrayList<Pair<Player, Integer>>()));
@@ -237,6 +237,8 @@ public class CodeforcesParser {
         }catch(IOException e){
             e.printStackTrace();
         }
+        
+        return eventi;
     }
     
     public static void main(String args[]){
