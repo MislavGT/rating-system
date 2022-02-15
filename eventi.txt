@@ -1,0 +1,569 @@
+contest: 1600
+
+
+
+contest: 1601
+
+
+
+contest: 1602
+umangsingla617 4515
+AsktoAjinkya 1721
+k_s_h_i_t_i_j 2710
+FairoozR 4275
+INVINCIBLE_1 1679
+_orange_ 3266
+
+
+
+contest: 1603
+
+
+
+contest: 1604
+ankitkumar1578114 3142
+Satyam_86770 6157
+umangsingla617 1026
+AsktoAjinkya 674
+suryam9 5072
+mankeswapnil0 6434
+PrasheelKT 2462
+k_s_h_i_t_i_j 4758
+FairoozR 4726
+Vishal_345 3463
+cullinan_i 1888
+Asamidinov 7330
+Leaf.Maple 5740
+INVINCIBLE_1 2393
+Indraji7 4427
+
+
+
+contest: 1605
+ankitkumar1578114 2114
+Satyam_86770 6129
+AsktoAjinkya 1924
+amit.chakraborti9 4139
+mankeswapnil0 6668
+k_s_h_i_t_i_j 7682
+FairoozR 4422
+Vishal_345 4735
+Asamidinov 5718
+Leaf.Maple 6828
+Indraji7 4958
+
+
+
+contest: 1606
+ankitkumar1578114 6140
+Satyam_86770 7363
+umangsingla617 7059
+suryam9 3618
+mankeswapnil0 8667
+PrasheelKT 3842
+k_s_h_i_t_i_j 6952
+FairoozR 2706
+Vishal_345 896
+Asamidinov 8663
+INVINCIBLE_1 2989
+Indraji7 5778
+
+
+
+contest: 1607
+ankitkumar1578114 2380
+Satyam_86770 4187
+umangsingla617 1709
+mankeswapnil0 6418
+k_s_h_i_t_i_j 3070
+FairoozR 6025
+Vishal_345 525
+cullinan_i 2576
+Asamidinov 9010
+INVINCIBLE_1 3714
+_orange_ 9447
+Indraji7 1419
+
+
+
+contest: 1608
+sidakbhatia 2217
+ankitkumar1578114 4583
+Satyam_86770 4245
+umangsingla617 2200
+AsktoAjinkya 4177
+mankeswapnil0 5567
+PrasheelKT 944
+Vishal_345 2913
+MikleDevil 8825
+Asamidinov 5977
+INVINCIBLE_1 4583
+
+
+
+contest: 1609
+sidakbhatia 4302
+ankitkumar1578114 3351
+Satyam_86770 5140
+suryam9 6160
+mankeswapnil0 6160
+FairoozR 4396
+Vishal_345 4016
+MikleDevil 4518
+Asamidinov 4094
+
+
+
+contest: 1610
+aayush_chhabra 5406
+Satyam_86770 5206
+umangsingla617 3523
+suryam9 5660
+amit.chakraborti9 5277
+mankeswapnil0 7286
+k_s_h_i_t_i_j 4395
+FairoozR 6633
+Vishal_345 2438
+MikleDevil 4388
+Asamidinov 6697
+INVINCIBLE_1 3905
+Indraji7 3368
+
+
+
+contest: 1611
+ankitkumar1578114 1319
+aayush_chhabra 1165
+Satyam_86770 4403
+umangsingla617 8069
+suryam9 3586
+mankeswapnil0 5069
+k_s_h_i_t_i_j 3883
+FairoozR 1113
+Vishal_345 1548
+cullinan_i 2330
+MikleDevil 5697
+Asamidinov 5891
+Leaf.Maple 3053
+INVINCIBLE_1 1256
+_orange_ 3739
+Indraji7 2149
+
+
+
+contest: 1612
+suryam9 5409
+amit.chakraborti9 5316
+mankeswapnil0 4926
+k_s_h_i_t_i_j 3898
+Vishal_345 1355
+Asamidinov 2286
+INVINCIBLE_1 1813
+_orange_ 5663
+
+
+
+contest: 1613
+sidakbhatia 3608
+ankitkumar1578114 4945
+aayush_chhabra 4470
+Satyam_86770 3958
+AsktoAjinkya 1187
+suryam9 3973
+amit.chakraborti9 477
+mankeswapnil0 4417
+k_s_h_i_t_i_j 3388
+FairoozR 3027
+Vishal_345 2371
+MikleDevil 4698
+Asamidinov 3741
+_orange_ 3837
+Indraji7 3119
+
+
+
+contest: 1614
+aayush_chhabra 2697
+Satyam_86770 4999
+umangsingla617 1624
+amit.chakraborti9 2619
+mankeswapnil0 4305
+k_s_h_i_t_i_j 3041
+Vishal_345 2274
+cullinan_i 1760
+MikleDevil 6190
+Leaf.Maple 5927
+INVINCIBLE_1 4305
+_orange_ 4100
+
+
+
+contest: 1615
+ankitkumar1578114 7161
+aayush_chhabra 4759
+Satyam_86770 5473
+umangsingla617 10391
+AsktoAjinkya 1812
+mankeswapnil0 10707
+PrasheelKT 3384
+k_s_h_i_t_i_j 5282
+FairoozR 5418
+Asamidinov 5407
+Leaf.Maple 4938
+INVINCIBLE_1 3009
+_orange_ 6581
+Indraji7 3426
+
+
+
+contest: 1616
+sidakbhatia 3045
+aayush_chhabra 6004
+Satyam_86770 4865
+AsktoAjinkya 2441
+amit.chakraborti9 4911
+mankeswapnil0 6272
+PrasheelKT 5303
+FairoozR 1776
+Vishal_345 5687
+MikleDevil 2338
+Asamidinov 8254
+Leaf.Maple 6720
+INVINCIBLE_1 9588
+_orange_ 8427
+
+
+
+contest: 1617
+sidakbhatia 4219
+ankitkumar1578114 1087
+aayush_chhabra 4953
+Satyam_86770 3382
+AsktoAjinkya 450
+suryam9 7157
+amit.chakraborti9 2602
+mankeswapnil0 6280
+PrasheelKT 3484
+k_s_h_i_t_i_j 2861
+Vishal_345 4309
+cullinan_i 2826
+MikleDevil 6283
+Asamidinov 4742
+_orange_ 2237
+
+
+
+contest: 1618
+sidakbhatia 503
+Satyam_86770 2844
+umangsingla617 1730
+AsktoAjinkya 514
+suryam9 5086
+amit.chakraborti9 2137
+mankeswapnil0 3445
+PrasheelKT 262
+FairoozR 4594
+Vishal_345 818
+cullinan_i 2491
+MikleDevil 6085
+Asamidinov 6120
+Leaf.Maple 8867
+INVINCIBLE_1 1989
+Indraji7 1407
+
+
+
+contest: 1619
+sidakbhatia 1061
+ankitkumar1578114 2780
+aayush_chhabra 1469
+Satyam_86770 4650
+umangsingla617 3348
+suryam9 4451
+amit.chakraborti9 2408
+mankeswapnil0 8976
+PrasheelKT 5880
+FairoozR 4697
+MikleDevil 4423
+Asamidinov 5791
+Leaf.Maple 4332
+INVINCIBLE_1 1610
+_orange_ 1768
+Indraji7 3522
+
+
+
+contest: 1620
+sidakbhatia 3123
+ankitkumar1578114 2100
+Satyam_86770 3022
+umangsingla617 4113
+suryam9 4245
+mankeswapnil0 4788
+PrasheelKT 1878
+FairoozR 7105
+Vishal_345 3123
+cullinan_i 1064
+MikleDevil 5178
+Asamidinov 5242
+_orange_ 4205
+
+
+
+contest: 1621
+sidakbhatia 4058
+ankitkumar1578114 3865
+aayush_chhabra 5315
+Satyam_86770 6484
+AsktoAjinkya 3876
+suryam9 7228
+amit.chakraborti9 4747
+mankeswapnil0 12494
+PrasheelKT 4996
+k_s_h_i_t_i_j 6484
+Asamidinov 11162
+Leaf.Maple 4541
+_orange_ 6065
+Indraji7 4747
+
+
+
+contest: 1622
+sidakbhatia 1595
+ankitkumar1578114 4796
+aayush_chhabra 2310
+Satyam_86770 5528
+AsktoAjinkya 2574
+suryam9 9077
+amit.chakraborti9 3052
+mankeswapnil0 6042
+PrasheelKT 2295
+FairoozR 6814
+Vishal_345 6814
+MikleDevil 4590
+Asamidinov 9585
+Leaf.Maple 4058
+_orange_ 6496
+Indraji7 3307
+
+
+
+contest: 1623
+ankitkumar1578114 4205
+aayush_chhabra 3405
+AsktoAjinkya 2473
+amit.chakraborti9 2285
+mankeswapnil0 4947
+PrasheelKT 1538
+FairoozR 4496
+Vishal_345 2441
+MikleDevil 4322
+Asamidinov 6157
+Leaf.Maple 1878
+INVINCIBLE_1 3361
+_orange_ 7609
+
+
+
+contest: 1624
+sidakbhatia 1334
+ankitkumar1578114 2346
+aayush_chhabra 1828
+Satyam_86770 4001
+umangsingla617 3608
+AsktoAjinkya 610
+suryam9 1991
+amit.chakraborti9 1763
+mankeswapnil0 3693
+PrasheelKT 2713
+k_s_h_i_t_i_j 3528
+cullinan_i 2058
+Asamidinov 7360
+Leaf.Maple 2489
+_orange_ 2287
+
+
+
+contest: 1625
+sidakbhatia 990
+ankitkumar1578114 4225
+aayush_chhabra 1196
+Satyam_86770 5102
+AsktoAjinkya 1076
+mankeswapnil0 5951
+PrasheelKT 2060
+k_s_h_i_t_i_j 2319
+_orange_ 3068
+Indraji7 3949
+
+
+
+contest: 1626
+
+
+
+contest: 1627
+aayush_chhabra 2697
+Satyam_86770 5850
+umangsingla617 3490
+suryam9 4324
+mankeswapnil0 8031
+PrasheelKT 3175
+cullinan_i 2970
+MikleDevil 5117
+Leaf.Maple 10580
+INVINCIBLE_1 2722
+_orange_ 6654
+Indraji7 6381
+
+
+
+contest: 1628
+
+
+
+contest: 1629
+sidakbhatia 7104
+Satyam_86770 7359
+umangsingla617 4747
+AsktoAjinkya 2499
+suryam9 7597
+amit.chakraborti9 7471
+mankeswapnil0 2351
+PrasheelKT 937
+k_s_h_i_t_i_j 4267
+FairoozR 4946
+cullinan_i 3968
+MikleDevil 5012
+Asamidinov 4973
+Leaf.Maple 4546
+_orange_ 3911
+Indraji7 4040
+
+
+
+contest: 1630
+
+
+
+contest: 1631
+sidakbhatia 7766
+ankitkumar1578114 6840
+aayush_chhabra 2486
+Satyam_86770 8035
+umangsingla617 10681
+AsktoAjinkya 2660
+suryam9 4591
+amit.chakraborti9 2848
+mankeswapnil0 9700
+k_s_h_i_t_i_j 8817
+FairoozR 11122
+Vishal_345 3805
+cullinan_i 4678
+MikleDevil 3274
+Asamidinov 3851
+INVINCIBLE_1 3959
+_orange_ 15730
+Indraji7 4144
+
+
+
+contest: 1632
+sidakbhatia 2650
+ankitkumar1578114 3285
+aayush_chhabra 3791
+Satyam_86770 1523
+umangsingla617 4426
+AsktoAjinkya 1213
+suryam9 7680
+mankeswapnil0 7056
+k_s_h_i_t_i_j 8925
+FairoozR 9265
+Vishal_345 5685
+cullinan_i 6000
+MikleDevil 3004
+Asamidinov 2127
+Leaf.Maple 2178
+_orange_ 8104
+Indraji7 3676
+
+
+
+contest: 1633
+sidakbhatia 7609
+aayush_chhabra 3307
+Satyam_86770 4621
+AsktoAjinkya 3108
+suryam9 2635
+mankeswapnil0 9095
+Vishal_345 2219
+cullinan_i 3862
+MikleDevil 14444
+Asamidinov 2413
+Leaf.Maple 4789
+INVINCIBLE_1 4253
+_orange_ 8103
+Indraji7 3614
+
+
+
+contest: 1634
+sidakbhatia 780
+aayush_chhabra 6953
+Satyam_86770 6704
+AsktoAjinkya 1276
+suryam9 3267
+mankeswapnil0 6743
+FairoozR 5277
+cullinan_i 5031
+MikleDevil 3912
+Asamidinov 6875
+Leaf.Maple 3111
+INVINCIBLE_1 3825
+Indraji7 6864
+
+
+
+contest: 1635
+
+
+
+contest: 1636
+
+
+
+contest: 1637
+ankitkumar1578114 12159
+Satyam_86770 3113
+umangsingla617 7945
+AsktoAjinkya 1880
+suryam9 5717
+amit.chakraborti9 2738
+PrasheelKT 3237
+k_s_h_i_t_i_j 6787
+cullinan_i 3635
+MikleDevil 4314
+Asamidinov 7922
+Leaf.Maple 1729
+_orange_ 3818
+
+
+
+contest: 1638
+sidakbhatia 2245
+Satyam_86770 2467
+umangsingla617 7775
+AsktoAjinkya 2080
+suryam9 5827
+amit.chakraborti9 6393
+mankeswapnil0 4843
+cullinan_i 2715
+MikleDevil 4634
+Asamidinov 3079
+Leaf.Maple 4309
+INVINCIBLE_1 2100
+_orange_ 3907
+Indraji7 7009
+
+
+
