@@ -149,7 +149,6 @@ public class CodeforcesParser {
         return ret;
     }
     
-    
     public ArrayList<String> skiniRezultate(String contestId){
         //uzmi rezultate natjecanja
         String code = readUrl("https://codeforces.com/api/contest.standings?contestId=" + contestId +
@@ -212,7 +211,7 @@ public class CodeforcesParser {
                         continue;
                     eventi.get(i - POCETAK).addPlayer(curUser, ranked);
                 }
-                if(cnt == 20)
+                if(cnt == 30)
                     break;
             } 
             sc.close();
@@ -223,15 +222,17 @@ public class CodeforcesParser {
         for(int i = 0; i < eventi.size(); i++){
             Event e = eventi.get(i);
             ArrayList<Pair<Player, Integer>> tmp = e.getPlayers();
-            String van = "contest: " + (i + POCETAK) + "\n";
+            if(tmp == null || tmp.size() == 0)
+                continue;
+            String van = "_contest: " + (i + POCETAK) + "\n";
             for(Pair<Player, Integer> p : tmp){
                 van += p.getValue0().getId() + " " + p.getValue1() + "\n";
             }
-            cijela += van + "\n\n\n";
+            cijela += van;
         }
         
         try{
-            FileWriter fw = new FileWriter("eventi.txt");
+            FileWriter fw = new FileWriter("eventi2.txt");
             fw.write(cijela);
             fw.close();
         }catch(IOException e){
