@@ -246,6 +246,6 @@ public class CodeforcesParser {
         //new CodeforcesParser().skiniRezultate("1638");
         //getUser("tourist");
         //uzmiUzorak(); 
-        makeEvents();
+        //makeEvents();
     }
 }

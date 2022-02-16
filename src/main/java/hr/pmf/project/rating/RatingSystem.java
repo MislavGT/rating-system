@@ -127,10 +127,12 @@ public class RatingSystem {
     public static void main(String args[]) throws SQLException, ClassNotFoundException, IOException{
         //ovo ne radi dok ne stavimo ljude u bazu (putem guia il rucno)
         
+        
         File file = new File("tenis.txt");
         if(file != null){
             List<Event> tmp = new RatingSystem(1).readEvent(file);
         }
+        
         /*
         JavaSqlite baza = new JavaSqlite();
         List<Player> tmp = baza.SelectPlayers("SELECT * FROM Player WHERE player_id > 0");
@@ -140,6 +142,7 @@ public class RatingSystem {
             }
         }
         */
+        
         
         //izdvojiLjude();
     }
