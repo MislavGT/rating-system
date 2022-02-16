@@ -4,6 +4,7 @@ package hr.pmf.project.rating;
 import java.util.ArrayList;
 import org.javatuples.Pair;
 import java.io.File;
+import java.sql.SQLException;
 import java.util.function.Consumer;
 
 public class Event {
@@ -30,6 +31,17 @@ public class Event {
         this.deltas = new ArrayList<>();
         this.priorMeans = new ArrayList<>();
         this.placements = new ArrayList<>();
+    }
+    
+    public void updateSql(){
+        JavaSqlite baza = new JavaSqlite();
+        for(Pair<Player, Integer> p : players){
+            try{
+                baza.UpdatePlayer(p.getValue0()); 
+            }catch(ClassNotFoundException | SQLException e){
+                e.printStackTrace();
+            }
+        }
     }
     
     public static double hyp(double x, double y){
