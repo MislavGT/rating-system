@@ -72,7 +72,7 @@ public class JavaSqlite {
             
             while(rs.next())
             {
-                GsonBuilder builder = new GsonBuilder(); 
+                GsonBuilder builder =   new GsonBuilder(); 
                 builder.setPrettyPrinting(); 
                 Gson gson = builder.create();
 
