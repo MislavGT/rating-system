@@ -20,6 +20,9 @@ double newtonMethod(double mean, double (*func)(double), double (*der)(double)){
     while(abs(x - y) > EPSILON && i < 10000){
         x = y;
         y = x - (func(x) / der(x));
+        if(y < -6000 || y > 9000){
+            return x;
+        }
         i++;
     }
     if(i == 10000){
@@ -45,14 +48,8 @@ double firstFunction(double x){
 double firstFunctionDerivative(double x){
     double sum = 0;
     for(int i = 0; i < length; i++){
-        if(placement <= placements[i]){
-            sum += (1 / (2 * shorthand(deltas[i]) * deltas[i]
-                * pow(cosh(1 - (x - priorMeans[i])/(2*shorthand(deltas[i]))), 2)));
-        }
-        if(placement >= placements[i]){
-            sum += (1 / (2 * shorthand(deltas[i]) * deltas[i]
-                * pow(cosh(1 + (x - priorMeans[i])/(2*shorthand(deltas[i]))), 2)));
-        }
+        sum += (1 / (2 * shorthand(deltas[i]) * deltas[i]
+                * pow(cosh((priorMeans[i] - x)/(2*shorthand(deltas[i]))), 2)));
     }
     return sum;
 }
