@@ -25,11 +25,22 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import org.javatuples.Pair;
 import java.util.Queue;
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.FileChooser;
+import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
+import javafx.concurrent.Task ;
+
 /**
  * FXML Controller class
  *
@@ -47,10 +58,20 @@ public class RatingGUIController implements Initializable {
     private Button updateButton;
     @FXML
     private Button unesiButton;
+    @FXML
+    private TableView<PlayerTable> tablica;
+    @FXML
+    public TableColumn<PlayerTable, String> ime;
+    @FXML
+    public TableColumn<PlayerTable, Double> rating;
+    TableView tablicaCopy;
     
     FileChooser odabirDatoteka;
     ArrayList<Pair<Player,Integer>> players = new ArrayList<Pair<Player,Integer>>();
     Queue<Event> eventsInProgress = new LinkedList<>();
+    ObservableList<PlayerTable> data = FXCollections.observableArrayList();
+    JavaSqlite App = new JavaSqlite();
+
     /**
      * Initializes the controller class.
      */
@@ -62,6 +83,13 @@ public class RatingGUIController implements Initializable {
         place.setDisable(true);
         updateButton.setDisable(true);
         unesiButton.setDisable(true);
+        odabirDatoteka = new FileChooser();
+        odabirDatoteka.setTitle("Otvori .txt datoteku");
+        odabirDatoteka.getExtensionFilters().addAll(new ExtensionFilter("Sve tekstualne", "*.txt"));
+        ime.setCellValueFactory(new PropertyValueFactory<>("Ime"));
+        rating.setCellValueFactory(new PropertyValueFactory<>("Rating"));
+        
+        tablica.setItems(data);
     }    
 
     @FXML
@@ -93,7 +121,6 @@ public class RatingGUIController implements Initializable {
         {
             if(check)
                 brojac = brIgraca;
-            JavaSqlite App = new JavaSqlite();
         
             List<Player> playerWithId = App.SelectPlayers("SELECT * FROM Player WHERE player_id = " + idNum + ";");
             System.out.println("Ime: " + playerWithId.get(0).getName() + ", mjesto: " + placeNum);
@@ -135,8 +162,6 @@ public class RatingGUIController implements Initializable {
             ID.deleteText(0,ID.getLength());
             place.deleteText(0,place.getLength());
             brojIgraca.deleteText(0, brojIgraca.getLength());
-
-
             alert.showAndWait();
         }
         
@@ -154,7 +179,34 @@ public class RatingGUIController implements Initializable {
     @FXML
     private void datasetHandler(ActionEvent event)
     {
-        File odabrana = odabirDatoteka.showOpenDialog(new Stage());
+        
+        File odabrana = odabirDatoteka.showOpenDialog (new Stage()) ;
+        Task zadatak = new Task<Void>(){
+            @Override
+            public Void call() throws Exception {
+                try{
+                    String cijela = "", linija = "";
+                    Path p = Paths.get(odabrana.getAbsolutePath());
+                    BufferedReader citac = Files.newBufferedReader(p, StandardCharsets.UTF_8);
+                    while((linija = citac.readLine()) != null)
+                    {
+                        if ( isCancelled () ) { break ; }
+                        cijela += linija + "\n";
+                        ArrayList<Double> m_list = new ArrayList<Double>();
+                        ArrayList<Double> d_list = new ArrayList<Double>();
+                        m_list.add(1500.);
+                        d_list.add(Double.valueOf(1)/Double.valueOf(350*350));
+                        Player forDatabase = new Player("",1500.,350.,linija,m_list,d_list);
+                        //App.InsertPlayer(forDatabase);
+                
+                        data.add(new PlayerTable(linija, 1500.));
+                    }
+        
+                }
+                catch(Exception e){}
+                return null;}
+        };
+        new Thread(zadatak).start();
         /*try{
             String cijela = "", linija = "";
             Path p = Paths.get(odabrana.getAbsolutePath());
@@ -162,10 +214,46 @@ public class RatingGUIController implements Initializable {
             while((linija = citac.readLine()) != null)
             {
                 cijela += linija + "\n";
+                ArrayList<Double> m_list = new ArrayList<Double>();
+                ArrayList<Double> d_list = new ArrayList<Double>();
+                m_list.add(1500.);
+                d_list.add(Double.valueOf(1)/Double.valueOf(350*350));
+                Player forDatabase = new Player("",1500.,350.,linija,m_list,d_list);
+                //App.InsertPlayer(forDatabase);
+                
+                data.add(new PlayerTable(linija, 1500.));
             }
         
         }
         catch(Exception e){}*/
+    }
+    
+    public class PlayerTable{
+        SimpleStringProperty Ime;
+        SimpleDoubleProperty Rating;
+        
+        public PlayerTable(String n, Double m)
+        {
+            Ime = new SimpleStringProperty(n); 
+            Rating = new SimpleDoubleProperty(m);;
+        }
+        public String getIme()
+        {
+            return Ime.get();
+        }
+        public void setIme(String ime)
+        {
+            Ime.set(ime);
+        }
+        public double getRating()
+        {
+            return Rating.get();
+        }
+        public void setRating(double rating)
+        {
+            Rating.set(rating);
+        }
+    
     }
     
 }
