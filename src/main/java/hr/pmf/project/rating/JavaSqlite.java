@@ -47,17 +47,29 @@ public class JavaSqlite {
     //app.InsertPlayer(plyr);
     //app.InsertEvent(evt);
     List<Event> events = app.SelectEvents("SELECT * FROM Event");
-    for (Event element : events)
+    System.out.println(events.size());
+    /*for (Event element : events)
     {
         for(Pair<Player, Integer> item: element.getPlayers())
             System.out.println(item.getValue0().getName());
 
-    }
+    }*/
     System.out.println("prije player");
+    app.InsertPlayer(plyr);
     List<Player> players = app.SelectPlayers("SELECT * FROM Player");
     for (Player element : players)
         System.out.println(element.getName());
     
+    app.DeletePlayer(plyr);
+    app.DeleteEvent(evt);
+    Player novi = new Player("6",2,2,"John", first, second);
+    app.UpdatePlayer(novi);
+    System.out.println("poslije brisanja");
+    players = app.SelectPlayers("SELECT * FROM Player");
+    for (Player element : players)
+        System.out.println(element.getName());
+    
+
     }
     
     
@@ -132,7 +144,40 @@ public class JavaSqlite {
         stmt.close();
         return events;
     }
+    public void UpdatePlayer(Player player) throws ClassNotFoundException, SQLException
+    {
+        Statement stmt = null;
+        try(Connection conn = connect())
+        {
+            Gson gson = new Gson();
+            stmt = conn.createStatement();
+            String sql = "UPDATE Player SET sigma = "+player.getSigma()+", mean = "+player.getMean()+", m_list = '"+gson.toJson(player.getM())+"', d_list = '"+gson.toJson(player.getD())+"' WHERE player_id = "+player.getId()+";";
+            System.out.println(sql );
+            stmt.executeQuery(sql);
+        }
+        catch(SQLException e)
+        {
+            System.out.println(e.getMessage());
+        }
+        stmt.close();
+    }
+    public void DeletePlayer(Player player) throws ClassNotFoundException, SQLException
+    {
+        Statement stmt = null;
+        try(Connection conn = connect())
+        {
+            stmt = conn.createStatement();
+            String sql = "DELETE FROM Player WHERE name = '"+player.getName()+"';";
+            System.out.println(sql );
+            stmt.executeQuery(sql);
+        }
+        catch(SQLException e)
+        {
+            System.out.println(e.getMessage());
+        }
+        stmt.close();
     
+    }
     public void InsertPlayer(Player player) throws ClassNotFoundException, SQLException
     {
         Statement stmt = null;
@@ -155,6 +200,34 @@ public class JavaSqlite {
         return;
     }
     
+    public void DeleteEvent(Event event) throws ClassNotFoundException, SQLException
+    {
+        Statement stmt = null;
+        Player[] plyrs = new Player[event.getPlayers().size()];
+        int[] positions = new int[event.getPlayers().size()];
+        int i = 0;
+        for(Pair<Player,Integer> item : event.getPlayers())
+        {
+            plyrs[i] = item.getValue0();
+            positions[i] = item.getValue1();
+            i++;
+        }
+        try(Connection conn = connect())
+        {
+            Gson gson = new Gson();
+            stmt = conn.createStatement();
+            String sql = "DELETE FROM Event WHERE players = '"+gson.toJson(plyrs)+"' AND place = '"+gson.toJson(positions)+"'";
+            System.out.println(sql );
+            stmt.executeQuery(sql);
+        }
+        catch(SQLException e)
+        {
+            System.out.println(e.getMessage());
+        }
+        stmt.close();
+    
+    }
+    
     public void InsertEvent(Event event) throws ClassNotFoundException, SQLException
     {
         Statement stmt = null;
@@ -165,6 +238,7 @@ public class JavaSqlite {
         {
             plyrs[i] = item.getValue0();
             positions[i] = item.getValue1();
+            i++;
         }
         try(Connection conn = connect())
         {
