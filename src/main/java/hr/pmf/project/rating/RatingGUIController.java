@@ -25,6 +25,8 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import org.javatuples.Pair;
 import java.util.Queue;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -59,6 +61,8 @@ public class RatingGUIController implements Initializable {
     @FXML
     private Button unesiButton;
     @FXML
+    private Button gotovDogadajButton;
+    @FXML
     private TableView<PlayerTable> tablica;
     @FXML
     public TableColumn<PlayerTable, String> ime;
@@ -77,7 +81,14 @@ public class RatingGUIController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
+        try {
+            // TODO
+            App.DeleteAllPlayers();
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(RatingGUIController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(RatingGUIController.class.getName()).log(Level.SEVERE, null, ex);
+        }
         brojIgraca.setDisable(true);
         ID.setDisable(true);
         place.setDisable(true);
@@ -169,13 +180,51 @@ public class RatingGUIController implements Initializable {
     @FXML
     private void updateHandler(ActionEvent event)
     {
-        System.out.println("Book");
-        /*Event notProcessedEvent = eventsInProgress.peek();
-        for(Pair<Player,Integer> item: notProcessedEvent.getPlayers())
+        Event notProcessedEvent = eventsInProgress.peek();
+        notProcessedEvent.calculate();
+        notProcessedEvent.updateSql();
+        for(Player plyr : notProcessedEvent.getPlayerList())
         {
-            notProcessedEvent.update(item);
-        }*/
+            for(PlayerTable plTable : tablica.getItems())
+            {
+                if(plyr.getName().equals(plTable.getIme()))
+                {
+                        plTable.setRating(plyr.getMean());
+                        break;
+                }
+            }
+        }
+        eventsInProgress.remove();
+        if(eventsInProgress.size() == 0)
+            updateButton.setDisable(true);
+            
+        
     }
+    
+    @FXML
+    private void gotovDogadajHandler(ActionEvent event) throws SQLException
+    {
+        File odabrana = odabirDatoteka.showOpenDialog (new Stage());
+        RatingSystem RS = new RatingSystem(1);
+        List<Event> lista = RS.readEvent(odabrana);
+        System.out.println("Booooooook");
+        for(Event evt : lista)
+        {
+            for(Player plyr : evt.getPlayerList())
+            {
+                for(PlayerTable plTable : tablica.getItems())
+                {
+                    if(plyr.getName().equals(plTable.getIme()) )
+                    {
+                        plTable.setRating(plyr.getMean());
+                        break;
+                    }
+                }
+            }
+        }
+        //tablica.setItems(tablica.getItems());
+    }
+    
     @FXML
     private void datasetHandler(ActionEvent event)
     {
@@ -197,7 +246,7 @@ public class RatingGUIController implements Initializable {
                         m_list.add(1500.);
                         d_list.add(Double.valueOf(1)/Double.valueOf(350*350));
                         Player forDatabase = new Player("",1500.,350.,linija,m_list,d_list);
-                        //App.InsertPlayer(forDatabase);
+                        App.InsertPlayer(forDatabase);
                 
                         data.add(new PlayerTable(linija, 1500.));
                     }
@@ -219,7 +268,7 @@ public class RatingGUIController implements Initializable {
                 m_list.add(1500.);
                 d_list.add(Double.valueOf(1)/Double.valueOf(350*350));
                 Player forDatabase = new Player("",1500.,350.,linija,m_list,d_list);
-                //App.InsertPlayer(forDatabase);
+                App.InsertPlayer(forDatabase);
                 
                 data.add(new PlayerTable(linija, 1500.));
             }

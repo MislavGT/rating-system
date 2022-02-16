@@ -152,8 +152,7 @@ public class JavaSqlite {
             Gson gson = new Gson();
             stmt = conn.createStatement();
             String sql = "UPDATE Player SET sigma = "+player.getSigma()+", mean = "+player.getMean()+", m_list = '"+gson.toJson(player.getM())+"', d_list = '"+gson.toJson(player.getD())+"' WHERE player_id = "+player.getId()+";";
-            System.out.println(sql );
-            stmt.executeQuery(sql);
+            stmt.executeUpdate(sql);
         }
         catch(SQLException e)
         {
@@ -168,8 +167,7 @@ public class JavaSqlite {
         {
             stmt = conn.createStatement();
             String sql = "DELETE FROM Player WHERE name = '"+player.getName()+"';";
-            System.out.println(sql );
-            stmt.executeQuery(sql);
+            stmt.executeUpdate(sql);
         }
         catch(SQLException e)
         {
@@ -178,6 +176,23 @@ public class JavaSqlite {
         stmt.close();
     
     }
+    public void DeleteAllPlayers() throws ClassNotFoundException, SQLException
+    {
+        Statement stmt = null;
+        try(Connection conn = connect())
+        {
+            stmt = conn.createStatement();
+            String sql = "DELETE FROM Player;";
+            stmt.executeUpdate(sql);
+        }
+        catch(SQLException e)
+        {
+            System.out.println(e.getMessage());
+        }
+        stmt.close();
+    
+    }
+    
     public void InsertPlayer(Player player) throws ClassNotFoundException, SQLException
     {
         Statement stmt = null;
@@ -188,7 +203,7 @@ public class JavaSqlite {
             Gson gson = new Gson(); 
             stmt = conn.createStatement();
             String sql = "INSERT INTO Player( name, mean, sigma, m_list, d_list) VALUES( '" + player.getName()+"', " + player.getMean() + ", "+player.getSigma()+", '" + gson.toJson(player.getM()) +"', '" + gson.toJson(player.getD())+"');";
-            stmt.executeQuery(sql);
+            stmt.executeUpdate(sql);
             
 
         }
@@ -217,8 +232,23 @@ public class JavaSqlite {
             Gson gson = new Gson();
             stmt = conn.createStatement();
             String sql = "DELETE FROM Event WHERE players = '"+gson.toJson(plyrs)+"' AND place = '"+gson.toJson(positions)+"'";
-            System.out.println(sql );
-            stmt.executeQuery(sql);
+            stmt.executeUpdate(sql);
+        }
+        catch(SQLException e)
+        {
+            System.out.println(e.getMessage());
+        }
+        stmt.close();
+    
+    }
+    public void DeleteAllEvents() throws ClassNotFoundException, SQLException
+    {
+        Statement stmt = null;
+        try(Connection conn = connect())
+        {
+            stmt = conn.createStatement();
+            String sql = "DELETE FROM Event;";
+            stmt.executeUpdate(sql);
         }
         catch(SQLException e)
         {
@@ -245,8 +275,7 @@ public class JavaSqlite {
             Gson gson = new Gson();
             stmt = conn.createStatement();
             String sql = "INSERT INTO Event(players, place) VALUES('"+gson.toJson(plyrs)+"', '"+gson.toJson(positions)+"');";
-            System.out.println(sql );
-            stmt.executeQuery(sql);
+            stmt.executeUpdate(sql);
         }
         catch(SQLException e)
         {
