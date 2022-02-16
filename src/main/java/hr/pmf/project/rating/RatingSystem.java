@@ -18,28 +18,28 @@ import org.javatuples.Pair;
  */
 public class RatingSystem {
     final int eventType;
-    /*
-    public static Player makePlayer(String handle, String playerId){
-        //radimo novog igraca i stavljamo ga u bazu
-        Player ret = null;
-        double _mean = 1500d, _sigma = 350d;
-        ArrayList<Double> m_list = new ArrayList<Double>();
-        m_list.add(1500d);
-        ArrayList<Double> d_list = new ArrayList<Double>();
-        d_list.add(1d / (350d * 350d));
-        ret = new Player(handle, _mean, _sigma, handle, m_list, d_list);
-        return ret;
-    }
-    */
-    
+    //0 - codeforces
+    //1 - tennis
     public RatingSystem(int eventType){
         this.eventType = eventType;
     }
     
-    public void readEvent(String fileName) throws SQLException{
-        File file = new File(fileName);
+    public static String separiraj(String s){
+        String ret = "";
+        int n = s.length();
+        for(int i = 0; i < n; i++){
+            if(i != 0 && s.charAt(i) >= 'A' && s.charAt(i) <= 'Z')
+                ret = ret + " ";
+            ret = ret + s.charAt(i);
+        }
+        return ret;
+    }
+    
+    public List<Event> readEvent(File file) throws SQLException{
+        //ucita evente, kalkulira dogadaje i mijenja rejtinge u bazi
         JavaSqlite baza = new JavaSqlite();
         List<Player> sviIgraci = null;
+        List<Event> ret = new ArrayList<Event>();
         try{
             sviIgraci = baza.SelectPlayers("SELECT * FROM Player WHERE player_id > 0");
             if(sviIgraci == null){
@@ -61,16 +61,20 @@ public class RatingSystem {
                     if(nPlayers > 0){
                         curEvent.calculate();
                         curEvent.updateSql();
+                        ret.add(curEvent);
                     }
                     nPlayers = 0;
-                    curEvent = new Event(new ArrayList<Pair<Player, Integer>>());
+                    curEvent = new Event(new ArrayList<>());
                 }else{
                     int ranked = Integer.parseInt(tmp[1]);
                     String playerId = tmp[0];
+                    if(eventType == 1){
+                        tmp[0] = separiraj(tmp[0]);
+                    }
                     nPlayers++;
                     Player curPlayer = null;
                     for(Player p : sviIgraci){
-                        if(p.getId() == playerId){
+                        if(p.getName().equals(playerId)){
                             curPlayer = p;
                             break;
                         }
@@ -87,10 +91,14 @@ public class RatingSystem {
             e.printStackTrace();
         }
         
+        return ret;
     }
     
     public static void main(String args[]) throws SQLException{
         //ovo ne radi dok ne stavimo ljude u bazu (putem guia il rucno)
-        new RatingSystem(1).readEvent("eventi2.txt");
+        File file = new File("eventi2.txt");
+        if(file != null){
+            List<Event> tmp = new RatingSystem(0).readEvent(file);
+        }
     }
 }

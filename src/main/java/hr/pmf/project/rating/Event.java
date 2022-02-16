@@ -37,7 +37,12 @@ public class Event {
         JavaSqlite baza = new JavaSqlite();
         for(Pair<Player, Integer> p : players){
             try{
-                baza.UpdatePlayer(p.getValue0()); 
+                if(Double.isNaN(p.getValue0().getMean())){
+                    System.out.println("igrac je " + p.getValue0().getName() + " sigma " + p.getValue0().getSigma() + " mean " + 
+                            p.getValue0().getMean());
+                    System.out.println("adasdasfdasdasdasdasdasd");
+                }
+                baza.UpdatePlayer(p.getValue0());
             }catch(ClassNotFoundException | SQLException e){
                 e.printStackTrace();
             }
