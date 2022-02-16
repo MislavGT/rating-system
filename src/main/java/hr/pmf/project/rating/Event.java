@@ -47,6 +47,26 @@ public class Event {
     public static double hyp(double x, double y){
         return Math.sqrt(x * x + y * y);
     }
+        
+    public int getSize(){
+        return this.players.size();
+    }
+    
+    public ArrayList<Integer> getPlacements(){
+        ArrayList<Integer> placementList = new ArrayList<>();
+        for(int i = 0; i <this.getSize(); i++){
+            placementList.add(players.get(i).getValue1());
+        }
+        return placementList;
+    }
+    
+    public ArrayList<Player> getPlayerList(){
+        ArrayList<Player> playerList = new ArrayList<>();
+        for(int i = 0; i < getSize(); i++){
+            playerList.add(players.get(i).getValue0());
+        }
+        return playerList;
+    }
     
     public void addPlayer(Player player, int rank){
         players.add(Pair.with(player, rank));

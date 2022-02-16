@@ -9,16 +9,19 @@ import java.util.Comparator;
 import java.util.concurrent.Callable;
 import java.util.concurrent.atomic.AtomicIntegerArray;
 import org.javatuples.Pair;
+import org.javatuples.Triplet;
 
 /**
  *
  * @author jurica
  */
 public class CalculationJobPredict implements Callable<Void>{
-    final static int EPSILON = 1000;
+    final static int EPSILON = 100;
+    final static boolean DRAW = Boolean.TRUE;
     
     ArrayList<Pair<Double, Integer>> al = null;
     ArrayList<AtomicIntegerArray> rankings = null;
+    ArrayList<Triplet<Double, Integer, Integer>> standardized = new ArrayList<>();
     public CalculationJobPredict(ArrayList<Pair<Double, Integer>> al, ArrayList<AtomicIntegerArray> rankings){
         this.al = al;
         this.rankings = rankings;
@@ -26,30 +29,43 @@ public class CalculationJobPredict implements Callable<Void>{
     
     @Override
     public Void call() throws Exception {
-        al.sort(new Comparator<Pair<Double, Integer>>(){
-                @Override
-                public int compare(Pair<Double, Integer> p1, Pair<Double, Integer> p2) {
-                    if((double)p1.getValue0() > (double)p2.getValue0())
-                        return -1;
-                    if((double)p1.getValue0() == (double)p2.getValue0())
-                        return 0;
-                    return 1;
+        al.sort((Pair<Double, Integer> p1, Pair<Double, Integer> p2) -> {
+            if((double)p1.getValue0() > (double)p2.getValue0())
+                return -1;
+            if((double)p1.getValue0() == (double)p2.getValue0())
+                return 0;
+            return 1;
+        });
+        
+        int nPlayers = al.size(); 
+        
+        standardized.add(new Triplet(al.get(0).getValue0(), al.get(0).getValue1(), 1));
+        if(DRAW){
+            for(int i = 1; i < nPlayers; i++){
+                if(al.get(i-1).getValue0() - al.get(i).getValue0() < EPSILON){
+                    standardized.add(new Triplet(al.get(i).getValue0(), 
+                            al.get(i).getValue1(), 
+                            standardized.get(i-1).getValue2()));
                 }
-            });
-        
-        int nPlayers = al.size();
-        
-        /* for(int k = 0; k < nPlayers - 1; k++){
-            if((al.get(k).getValue0() - al.get(k+1).getValue0()) < EPSILON){
-                Pair<Double, Integer> replacement = Pair.with
-                    (al.get(k+1).getValue0(), al.get(k).getValue1());
-                al.set(k+1, replacement);
+                else{
+                    standardized.add(new Triplet(al.get(i).getValue0(), 
+                            al.get(i).getValue1(), i+1));
+                }
             }
-        } */
+        }
+        else{
+            for(int i = 1; i < nPlayers; i++){
+                standardized.add(new Triplet(al.get(i).getValue0(), 
+                            al.get(i).getValue1(), i+1));
+            }
+        }
+        
+        
         
         for(int j = 0; j < nPlayers; j++){
             int player = al.get(j).getValue1();
-            rankings.get(player).getAndIncrement(j);
+            rankings.get(player).getAndIncrement(
+                    standardized.get(j).getValue2()-1);
             //rankings.get(player).set(j, c + 1);
         }
         return null;

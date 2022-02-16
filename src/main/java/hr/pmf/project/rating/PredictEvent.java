@@ -91,7 +91,8 @@ public class PredictEvent {
         
         executorService.shutdown();
      
-        //u postocima
+    }
+    public ArrayList<ArrayList<Double>> matr(){
         ArrayList<ArrayList<Double>> freq = new ArrayList<>();
         for(int i = 0; i < nPlayers; i++){
             ArrayList<Double> cur = new ArrayList<>();
@@ -100,21 +101,22 @@ public class PredictEvent {
             }
             freq.add(cur);
         }
-        this.setRankovi(freq);
+        return freq;
     }
+   
     
     public static void main(String args[]){
         ArrayList<Player> testna = new ArrayList<>();
         ArrayList<Double> emp = new ArrayList<>();
-        testna.add(new Player("001", 1652d, 128d, "Marko", emp, emp));
-        testna.add(new Player("002", 1348d, 128d, "Petar", emp, emp));
-        testna.add(new Player("003", 1212d, 35d, "Ivan", emp, emp));
-        testna.add(new Player("004", 1710d, 35d, "Luka", emp, emp));
-        testna.add(new Player("005", 1823d, 35d, "Pero", emp, emp));
-        testna.add(new Player("006", 1900d, 35d, "Stef", emp, emp));
-        testna.add(new Player("007", 1312d, 35d, "Andrija", emp, emp));
-        testna.add(new Player("008", 1500d, 35d, "Boris", emp, emp));
-        testna.add(new Player("009", 2400d, 35d, "Milan", emp, emp));
+        testna.add(new Player("001", 3000d, 35d, "Marko", emp, emp));
+        testna.add(new Player("002", 5000d, 35d, "Petar", emp, emp));
+        testna.add(new Player("003", 6000d, 35d, "Ivan", emp, emp));
+        testna.add(new Player("004", 6000d, 35d, "Luka", emp, emp));
+        testna.add(new Player("005", 7000d, 35d, "Pero", emp, emp));
+        testna.add(new Player("006", 7000d, 35d, "Stef", emp, emp));
+        testna.add(new Player("007", 9000d, 35d, "Andrija", emp, emp));
+        testna.add(new Player("008", 9000d, 35d, "Boris", emp, emp));
+        testna.add(new Player("009", 9000d, 35d, "Milan", emp, emp));
         PredictEvent novi = new PredictEvent(testna);
         novi.process();
         HashMap<String, ArrayList<Double>> predvidi = novi.getRankovi();
