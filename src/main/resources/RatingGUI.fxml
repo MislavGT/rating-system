@@ -11,18 +11,18 @@
 
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="hr.pmf.project.rating.RatingGUIController">
    <children>
-      <Button layoutX="336.0" layoutY="344.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="165.0" text="Unesi početni dataset" />
+      <Button onAction="#datasetHandler" layoutX="336.0" layoutY="344.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="165.0" text="Unesi početni dataset" />
       <TableView layoutX="228.0" layoutY="29.0" prefHeight="308.0" prefWidth="366.0">
         <columns>
-          <TableColumn prefWidth="75.0" text="C1" />
-          <TableColumn prefWidth="75.0" text="C2" />
+          <TableColumn prefWidth="180.80003356933594" text="Ime" />
+          <TableColumn prefWidth="184.7999267578125" text="Rating" />
         </columns>
       </TableView>
       <SplitPane dividerPositions="0.5179303278688525" layoutX="-1.0" orientation="VERTICAL" prefHeight="392.0" prefWidth="229.0">
         <items>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="147.0" prefWidth="206.0">
                <children>
-                  <Button layoutX="65.0" layoutY="134.0" mnemonicParsing="false" onAction="#unesiHandler" prefHeight="25.0" prefWidth="78.0" text="Unesi" />
+                  <Button fx:id="unesiButton" layoutX="65.0" layoutY="134.0" mnemonicParsing="false" onAction="#unesiHandler" prefHeight="25.0" prefWidth="78.0" text="Unesi" />
                   <TextField fx:id="ID" layoutX="21.0" layoutY="99.0" prefHeight="25.0" prefWidth="62.0" />
                   <TextField fx:id="place" layoutX="128.0" layoutY="99.0" prefHeight="25.0" prefWidth="69.0" />
                   <Label layoutX="143.0" layoutY="82.0" prefHeight="17.0" prefWidth="47.0" text="Mjesto" />
@@ -34,7 +34,7 @@
             </AnchorPane>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
                <children>
-                  <Button layoutX="59.0" layoutY="55.0" mnemonicParsing="false" prefHeight="76.0" prefWidth="110.0" text="UPDATE TABLE" />
+                  <Button fx:id="updateButton" layoutX="59.0" layoutY="55.0" mnemonicParsing="false" onAction="#updateHandler" prefHeight="76.0" prefWidth="110.0" text="UPDATE TABLE" />
                </children>
             </AnchorPane>
         </items>
