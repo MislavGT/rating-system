@@ -33,7 +33,7 @@ public class Event {
         this.placements = new ArrayList<>();
     }
     
-    public void updateSql(){
+    public void updateSql() throws ClassNotFoundException{
         JavaSqlite baza = new JavaSqlite();
         for(Pair<Player, Integer> p : players){
             try{

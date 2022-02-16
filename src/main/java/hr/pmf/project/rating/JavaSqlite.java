@@ -27,57 +27,59 @@ import org.javatuples.Pair;
 public class JavaSqlite {
     
     public static void main(String[] args) throws ClassNotFoundException, SQLException {
-    // TODO code application logic here
-    JavaSqlite app = new JavaSqlite();
-    ArrayList<Double> first = new ArrayList<Double>();
-    first.add(2.0);
-    first.add(3.0);
-    first.add(4.0);
-    first.add(5.0);
-    ArrayList<Double> second = new ArrayList<Double>();
-    second.add(1.2);
-    second.add(1.3);
-    second.add(1.8);
+        // TODO code application logic here
+        JavaSqlite app = new JavaSqlite();
+        ArrayList<Double> first = new ArrayList<Double>();
+        first.add(2.0);
+        first.add(3.0);
+        first.add(4.0);
+        first.add(5.0);
+        ArrayList<Double> second = new ArrayList<Double>();
+        second.add(1.2);
+        second.add(1.3);
+        second.add(1.8);
 
 
-    Player plyr = new Player("59",2,3, "Dorian", first, second  );
-    ArrayList<Pair<Player,Integer>> for_evt = new ArrayList<Pair<Player,Integer>>();
-    for_evt.add(new Pair(plyr,10));
-    Event evt = new Event(for_evt);
-    //app.InsertPlayer(plyr);
-    //app.InsertEvent(evt);
-    List<Event> events = app.SelectEvents("SELECT * FROM Event");
-    System.out.println(events.size());
-    /*for (Event element : events)
-    {
-        for(Pair<Player, Integer> item: element.getPlayers())
-            System.out.println(item.getValue0().getName());
+        Player plyr = new Player("59",2,3, "Dorian", first, second  );
+        ArrayList<Pair<Player,Integer>> for_evt = new ArrayList<Pair<Player,Integer>>();
+        for_evt.add(new Pair(plyr,10));
+        Event evt = new Event(for_evt);
+        //app.InsertPlayer(plyr);
+        //app.InsertEvent(evt);
+        List<Event> events = app.SelectEvents("SELECT * FROM Event");
+        System.out.println(events.size());
+        /*for (Event element : events)
+        {
+            for(Pair<Player, Integer> item: element.getPlayers())
+                System.out.println(item.getValue0().getName());
 
-    }*/
-    System.out.println("prije player");
-    app.InsertPlayer(plyr);
-    List<Player> players = app.SelectPlayers("SELECT * FROM Player");
-    for (Player element : players)
-        System.out.println(element.getName());
-    
-    app.DeletePlayer(plyr);
-    app.DeleteEvent(evt);
-    Player novi = new Player("6",2,2,"John", first, second);
-    app.UpdatePlayer(novi);
-    System.out.println("poslije brisanja");
-    players = app.SelectPlayers("SELECT * FROM Player");
-    for (Player element : players)
-        System.out.println(element.getName());
-    
+        }*/
+        System.out.println("prije player");
+        app.InsertPlayer(plyr);
+        List<Player> players = app.SelectPlayers("SELECT * FROM Player");
+        for (Player element : players)
+            System.out.println(element.getName());
 
+        app.DeletePlayer(plyr);
+        app.DeleteEvent(evt);
+        Player novi = new Player("6",2,2,"John", first, second);
+        app.UpdatePlayer(novi);
+        System.out.println("poslije brisanja");
+        players = app.SelectPlayers("SELECT * FROM Player");
+        for (Player element : players)
+            System.out.println(element.getName());
     }
     
+    final Connection conn;
+    public JavaSqlite() throws ClassNotFoundException{
+        conn = connect();
+    }
     
     public List<Player> SelectPlayers(String sql) throws ClassNotFoundException, SQLException
     {
         List<Player> players = new ArrayList<Player>();
         Statement stmt = null;
-        try(Connection conn = connect())
+        try
         {
             stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(sql);
@@ -101,6 +103,7 @@ public class JavaSqlite {
 
                 
                 players.add(player);
+               // conn.close();
             }
             
         }
@@ -116,7 +119,7 @@ public class JavaSqlite {
     {
         List<Event> events = new ArrayList<Event>();
         Statement stmt = null;
-        try(Connection conn = connect())
+        try
         {
             stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(sql);
@@ -136,6 +139,9 @@ public class JavaSqlite {
                 }
                 events.add(new Event(lista));
             }
+            
+            //conn.close();
+            
         }
         catch(SQLException e)
         {
@@ -147,12 +153,13 @@ public class JavaSqlite {
     public void UpdatePlayer(Player player) throws ClassNotFoundException, SQLException
     {
         Statement stmt = null;
-        try(Connection conn = connect())
+        try
         {
             Gson gson = new Gson();
             stmt = conn.createStatement();
             String sql = "UPDATE Player SET sigma = "+player.getSigma()+", mean = "+player.getMean()+", m_list = '"+gson.toJson(player.getM())+"', d_list = '"+gson.toJson(player.getD())+"' WHERE player_id = "+player.getId()+";";
             stmt.executeUpdate(sql);
+           // conn.close();
         }
         catch(SQLException e)
         {
@@ -163,11 +170,12 @@ public class JavaSqlite {
     public void DeletePlayer(Player player) throws ClassNotFoundException, SQLException
     {
         Statement stmt = null;
-        try(Connection conn = connect())
+        try
         {
             stmt = conn.createStatement();
             String sql = "DELETE FROM Player WHERE name = '"+player.getName()+"';";
             stmt.executeUpdate(sql);
+           // conn.close();
         }
         catch(SQLException e)
         {
@@ -179,18 +187,18 @@ public class JavaSqlite {
     public void DeleteAllPlayers() throws ClassNotFoundException, SQLException
     {
         Statement stmt = null;
-        try(Connection conn = connect())
+        try
         {
             stmt = conn.createStatement();
             String sql = "DELETE FROM Player;";
             stmt.executeUpdate(sql);
+            //conn.close();
         }
         catch(SQLException e)
         {
             System.out.println(e.getMessage());
         }
         stmt.close();
-    
     }
     
     public void InsertPlayer(Player player) throws ClassNotFoundException, SQLException
@@ -198,14 +206,13 @@ public class JavaSqlite {
         Statement stmt = null;
         //System.out.println("Prije try");
 
-        try(Connection conn = connect())
+        try
         {
             Gson gson = new Gson(); 
             stmt = conn.createStatement();
             String sql = "INSERT INTO Player( name, mean, sigma, m_list, d_list) VALUES( '" + player.getName()+"', " + player.getMean() + ", "+player.getSigma()+", '" + gson.toJson(player.getM()) +"', '" + gson.toJson(player.getD())+"');";
             stmt.executeUpdate(sql);
-            
-
+           // conn.close();
         }
         catch(SQLException e)
         {
@@ -227,12 +234,13 @@ public class JavaSqlite {
             positions[i] = item.getValue1();
             i++;
         }
-        try(Connection conn = connect())
+        try
         {
             Gson gson = new Gson();
             stmt = conn.createStatement();
             String sql = "DELETE FROM Event WHERE players = '"+gson.toJson(plyrs)+"' AND place = '"+gson.toJson(positions)+"'";
             stmt.executeUpdate(sql);
+            //conn.close();
         }
         catch(SQLException e)
         {
@@ -244,11 +252,12 @@ public class JavaSqlite {
     public void DeleteAllEvents() throws ClassNotFoundException, SQLException
     {
         Statement stmt = null;
-        try(Connection conn = connect())
+        try
         {
             stmt = conn.createStatement();
             String sql = "DELETE FROM Event;";
             stmt.executeUpdate(sql);
+            //conn.close();
         }
         catch(SQLException e)
         {
@@ -270,35 +279,37 @@ public class JavaSqlite {
             positions[i] = item.getValue1();
             i++;
         }
-        try(Connection conn = connect())
+        try
         {
             Gson gson = new Gson();
             stmt = conn.createStatement();
             String sql = "INSERT INTO Event(players, place) VALUES('"+gson.toJson(plyrs)+"', '"+gson.toJson(positions)+"');";
             stmt.executeUpdate(sql);
+            //conn.close();
         }
         catch(SQLException e)
         {
             System.out.println(e.getMessage());
         }
         stmt.close();
-        return;
+
     }
-     
-        
+    
     public Connection connect() throws ClassNotFoundException
     {
+        if(conn != null)
+            return conn;
         String url = "jdbc:sqlite:ratingsystemDB.db";
-        Connection conn = null;
+        Connection veza = null;
         try{
             Class.forName("org.sqlite.JDBC");
-            conn = DriverManager.getConnection(url);
+            veza = DriverManager.getConnection(url);
         }
         catch(SQLException e)
         {
             System.out.println(e.getMessage());
         }
-        return conn;
+        return veza;
     }
            
 }

@@ -64,7 +64,7 @@ public class RatingSystem {
     }
     */
     
-    public List<Event> readEvent(File file) throws SQLException{
+    public List<Event> readEvent(File file) throws SQLException, ClassNotFoundException{
         //ucita evente, kalkulira dogadaje i mijenja rejtinge u bazi
         JavaSqlite baza = new JavaSqlite();
         List<Player> sviIgraci = null;

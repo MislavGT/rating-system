@@ -74,7 +74,7 @@ public class RatingGUIController implements Initializable {
     ArrayList<Pair<Player,Integer>> players = new ArrayList<Pair<Player,Integer>>();
     Queue<Event> eventsInProgress = new LinkedList<>();
     ObservableList<PlayerTable> data = FXCollections.observableArrayList();
-    JavaSqlite App = new JavaSqlite();
+    JavaSqlite App;
 
     /**
      * Initializes the controller class.
@@ -82,25 +82,30 @@ public class RatingGUIController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         try {
-            // TODO
-            App.DeleteAllPlayers();
+            App = new JavaSqlite();
+            try {
+                // TODO
+                App.DeleteAllPlayers();
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(RatingGUIController.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (SQLException ex) {
+                Logger.getLogger(RatingGUIController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            brojIgraca.setDisable(true);
+            ID.setDisable(true);
+            place.setDisable(true);
+            updateButton.setDisable(true);
+            unesiButton.setDisable(true);
+            odabirDatoteka = new FileChooser();
+            odabirDatoteka.setTitle("Otvori .txt datoteku");
+            odabirDatoteka.getExtensionFilters().addAll(new ExtensionFilter("Sve tekstualne", "*.txt"));
+            ime.setCellValueFactory(new PropertyValueFactory<>("Ime"));
+            rating.setCellValueFactory(new PropertyValueFactory<>("Rating"));
+            
+            tablica.setItems(data);
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(RatingGUIController.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SQLException ex) {
-            Logger.getLogger(RatingGUIController.class.getName()).log(Level.SEVERE, null, ex);
         }
-        brojIgraca.setDisable(true);
-        ID.setDisable(true);
-        place.setDisable(true);
-        updateButton.setDisable(true);
-        unesiButton.setDisable(true);
-        odabirDatoteka = new FileChooser();
-        odabirDatoteka.setTitle("Otvori .txt datoteku");
-        odabirDatoteka.getExtensionFilters().addAll(new ExtensionFilter("Sve tekstualne", "*.txt"));
-        ime.setCellValueFactory(new PropertyValueFactory<>("Ime"));
-        rating.setCellValueFactory(new PropertyValueFactory<>("Rating"));
-        
-        tablica.setItems(data);
     }    
 
     @FXML
@@ -178,7 +183,7 @@ public class RatingGUIController implements Initializable {
         
     }
     @FXML
-    private void updateHandler(ActionEvent event)
+    private void updateHandler(ActionEvent event) throws ClassNotFoundException
     {
         Event notProcessedEvent = eventsInProgress.peek();
         notProcessedEvent.calculate();
@@ -202,10 +207,10 @@ public class RatingGUIController implements Initializable {
     }
     
     @FXML
-    private void gotovDogadajHandler(ActionEvent event) throws SQLException
+    private void gotovDogadajHandler(ActionEvent event) throws SQLException, ClassNotFoundException
     {
         File odabrana = odabirDatoteka.showOpenDialog (new Stage());
-        RatingSystem RS = new RatingSystem(1);
+        RatingSystem RS = new RatingSystem(0);
         List<Event> lista = RS.readEvent(odabrana);
         System.out.println("Booooooook");
         for(Event evt : lista)
@@ -229,7 +234,7 @@ public class RatingGUIController implements Initializable {
     private void datasetHandler(ActionEvent event)
     {
         
-        File odabrana = odabirDatoteka.showOpenDialog (new Stage()) ;
+        File odabrana = odabirDatoteka.showOpenDialog(new Stage()) ;
         Task zadatak = new Task<Void>(){
             @Override
             public Void call() throws Exception {
@@ -255,7 +260,6 @@ public class RatingGUIController implements Initializable {
                 catch(Exception e){}
                 return null;}
         };
-        new Thread(zadatak).start();
         /*try{
             String cijela = "", linija = "";
             Path p = Paths.get(odabrana.getAbsolutePath());
