@@ -1,11 +1,19 @@
 
 package hr.pmf.project.rating;
 
+import static hr.pmf.project.rating.PredictEvent.THREAD_POOL_SIZE;
 import java.util.ArrayList;
 import org.javatuples.Pair;
+import org.javatuples.Triplet;
 import java.io.File;
 import java.sql.SQLException;
+import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.function.Consumer;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.ExecutionException;
 
 public class Event {
     
@@ -31,6 +39,18 @@ public class Event {
         this.deltas = new ArrayList<>();
         this.priorMeans = new ArrayList<>();
         this.placements = new ArrayList<>();
+    }
+    
+    public ArrayList<Double> getDeltas(){
+        return deltas;
+    }
+    
+    public ArrayList<Double> getPriorMeans(){
+        return priorMeans;
+    }
+        
+    public ArrayList<Integer> getPlaces(){
+        return placements;
     }
     
     public void updateSql() throws ClassNotFoundException{
@@ -85,39 +105,41 @@ public class Event {
         return players;
     }
     
+
     public void calculate(){
-        players.forEach((Pair<Player, Integer> element1) -> {
-            Player player1 = element1.getValue0();
-            diffuse(player1);
-            deltas.add(hyp(player1.getSigma(), BETA));
-            priorMeans.add(player1.getMean());
-            placements.add(element1.getValue1());
+        CopyOnWriteArrayList<Triplet<Double, Double, Integer>> priors = 
+        new CopyOnWriteArrayList<>();
+        ArrayList<Future<Void>> tasks = new ArrayList<>();
+        ExecutorService executorService = 
+            Executors.newFixedThreadPool(THREAD_POOL_SIZE);
+        players.forEach((Pair<Player, Integer> element) -> {
+            Future<Void> diffuse = executorService.submit(
+                    new CalculationDiffuse(element, priors));
+            tasks.add(diffuse);
         });
+        tasks.forEach((Future<Void> ft) -> {
+            try{
+                ft.get();
+            }catch(ExecutionException | InterruptedException e){
+                
+            }
+        });
+        
+        executorService.shutdown();
+        
+        for(int i = 0; i < priors.size(); i++){
+            placements.add(priors.get(i).getValue2());
+            deltas.add(priors.get(i).getValue0());
+            priorMeans.add(priors.get(i).getValue1());
+        }
+        
         players.forEach(element2 -> {
             update(element2);
         });
+        
         placements.clear();
         priorMeans.clear();
         deltas.clear();
-    }
-    
-    public void diffuse(Player player){
-        double k = 1 / (1 + (Math.pow(GAMMA, 2) / 
-               Math.pow(player.getSigma(), 2)));
-        double w_G = Math.pow(k, RHO) * player.getD().get(0);
-        double w_L = 0;
-        for(int i = 0; i < player.getD().size(); i++){
-            w_L += player.getD().get(i);
-        }
-        w_L *= (1 - Math.pow(k, RHO));
-        player.getM().set(0, ((w_G * player.getM().get(0))
-                + (w_L * player.getMean())) / (w_G + w_L));
-        player.getD().set(0, k * (w_G + w_L));
-        for(int i = 1; i < player.getD().size(); i++){player.getD().
-                set(i, Math.pow(k, 1 + RHO)*player.getD().get(i));
-        }
-        player.setSigma(player.getSigma() / Math.sqrt(k));
-        
     }
     
     public void update(Pair<Player, Integer> player){
@@ -171,26 +193,31 @@ public class Event {
         Player Luka = new Player("003", 1500, 350, "Luka", m_list3, d_list3);
         Player Petar = new Player("004", 1500, 350, "Petar", m_list4, d_list4);
         Pair<Player, Integer> A = Pair.with(Marko, 1);
-        Pair<Player, Integer> B = Pair.with(Ivan, 1);
-        Pair<Player, Integer> C = Pair.with(Luka, 2);
+        Pair<Player, Integer> B = Pair.with(Ivan, 2);
+        Pair<Player, Integer> C = Pair.with(Luka, 3);
         Pair<Player, Integer> D = Pair.with(Petar, 4);
         ArrayList<Pair<Player, Integer>> players = new ArrayList<>();
         players.add(A); players.add(B); players.add(C); players.add(D);
         Event X = new Event(players);   
-        Pair<Player, Integer> G = Pair.with(Marko, 1);
+        Pair<Player, Integer> G = Pair.with(Marko, 3);
         Pair<Player, Integer> E = Pair.with(Ivan, 2);
-        Pair<Player, Integer> F = Pair.with(Luka, 3);
+        Pair<Player, Integer> F = Pair.with(Luka, 1);
         ArrayList<Pair<Player, Integer>> players2 = new ArrayList<>();
-        players2.add(G); players2.add(E);
+        players2.add(G); players2.add(E); players2.add(F);
         Event Y = new Event(players2);
         double prob4;
         for(int i = 0; i < 3; i++){
                 Y.calculate();
-                prob4 = cdf(cdfParameter(Marko, Ivan));
-                System.out.println(prob4);
                 System.out.println(Marko.getMean());
                 System.out.println(Ivan.getMean());
-                System.out.println(Ivan.getSigma());
+                System.out.println(Luka.getMean());
+        }
+        for(int i = 0; i < 3; i++){
+            X.calculate();
+            System.out.println(Marko.getMean());
+            System.out.println(Ivan.getMean());
+            System.out.println(Luka.getMean());
+            System.out.println(Petar.getMean());
         }
     }
                 
