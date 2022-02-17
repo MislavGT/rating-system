@@ -22,6 +22,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import org.javatuples.Pair;
 import java.util.Queue;
@@ -42,6 +43,8 @@ import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
 import javafx.concurrent.Task ;
+import javafx.scene.control.TableRow;
+import javax.swing.text.PlainDocument;
 
 /**
  * FXML Controller class
@@ -101,8 +104,23 @@ public class RatingGUIController implements Initializable {
             odabirDatoteka.getExtensionFilters().addAll(new ExtensionFilter("Sve tekstualne", "*.txt"));
             ime.setCellValueFactory(new PropertyValueFactory<>("Ime"));
             rating.setCellValueFactory(new PropertyValueFactory<>("Rating"));
-            
             tablica.setItems(data);
+            
+            tablica.setRowFactory(tv -> {;
+                TableRow<PlayerTable> row = new TableRow<PlayerTable>();
+                row.setOnMouseClicked(event -> {
+                    if(event.getClickCount() == 2 && (!row.isEmpty())){
+                        PlayerTable tmp = row.getItem();
+                        
+                        System.out.println("igrac je " + tmp.getIme());
+                    }
+                });
+                return row;
+            });
+            
+            
+            
+            
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(RatingGUIController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -114,7 +132,6 @@ public class RatingGUIController implements Initializable {
         ID.setDisable(false);
         place.setDisable(false);
         unesiButton.setDisable(false);
-        
     }
     boolean check = true;
     int brojac = 0;
@@ -202,39 +219,36 @@ public class RatingGUIController implements Initializable {
         eventsInProgress.remove();
         if(eventsInProgress.size() == 0)
             updateButton.setDisable(true);
-            
-        
     }
     
     @FXML
     private void gotovDogadajHandler(ActionEvent event) throws SQLException, ClassNotFoundException
     {
-        File odabrana = odabirDatoteka.showOpenDialog (new Stage());
-        RatingSystem RS = new RatingSystem(0);
-        List<Event> lista = RS.readEvent(odabrana);
-        System.out.println("Booooooook");
-        for(Event evt : lista)
-        {
-            for(Player plyr : evt.getPlayerList())
-            {
+        File odabrana = odabirDatoteka.showOpenDialog(new Stage());
+        String imeDatoteke = odabrana.getName();
+        int flag = (imeDatoteke.charAt(0) == 't') ? 1 : 0; 
+        Task<Void> zadatak = new Task<Void>(){
+            @Override
+            public Void call() throws SQLException, ClassNotFoundException{
+                RatingSystem RS = new RatingSystem(flag);
+                HashMap<String, Player> promjene = RS.readEvent(odabrana);
+             //   System.out.println("Booooooook");
                 for(PlayerTable plTable : tablica.getItems())
                 {
-                    if(plyr.getName().equals(plTable.getIme()) )
-                    {
-                        plTable.setRating(plyr.getMean());
-                        break;
-                    }
+                    Player novaVerzija = promjene.get(plTable.getIme());
+                    plTable.setRating(novaVerzija.getMean());
                 }
+                return null;
             }
-        }
+        };
+        new Thread(zadatak).start();
         //tablica.setItems(tablica.getItems());
     }
     
     @FXML
     private void datasetHandler(ActionEvent event)
     {
-        
-        File odabrana = odabirDatoteka.showOpenDialog(new Stage()) ;
+        File odabrana = odabirDatoteka.showOpenDialog(new Stage());
         Task zadatak = new Task<Void>(){
             @Override
             public Void call() throws Exception {
@@ -244,7 +258,7 @@ public class RatingGUIController implements Initializable {
                     BufferedReader citac = Files.newBufferedReader(p, StandardCharsets.UTF_8);
                     while((linija = citac.readLine()) != null)
                     {
-                        if ( isCancelled () ) { break ; }
+                        if (isCancelled()) { break ; }
                         cijela += linija + "\n";
                         ArrayList<Double> m_list = new ArrayList<Double>();
                         ArrayList<Double> d_list = new ArrayList<Double>();
@@ -252,7 +266,6 @@ public class RatingGUIController implements Initializable {
                         d_list.add(Double.valueOf(1)/Double.valueOf(350*350));
                         Player forDatabase = new Player("",1500.,350.,linija,m_list,d_list);
                         App.InsertPlayer(forDatabase);
-                
                         data.add(new PlayerTable(linija, 1500.));
                     }
         
@@ -260,25 +273,9 @@ public class RatingGUIController implements Initializable {
                 catch(Exception e){}
                 return null;}
         };
-        /*try{
-            String cijela = "", linija = "";
-            Path p = Paths.get(odabrana.getAbsolutePath());
-            BufferedReader citac = Files.newBufferedReader(p, StandardCharsets.UTF_8);
-            while((linija = citac.readLine()) != null)
-            {
-                cijela += linija + "\n";
-                ArrayList<Double> m_list = new ArrayList<Double>();
-                ArrayList<Double> d_list = new ArrayList<Double>();
-                m_list.add(1500.);
-                d_list.add(Double.valueOf(1)/Double.valueOf(350*350));
-                Player forDatabase = new Player("",1500.,350.,linija,m_list,d_list);
-                App.InsertPlayer(forDatabase);
-                
-                data.add(new PlayerTable(linija, 1500.));
-            }
         
-        }
-        catch(Exception e){}*/
+        new Thread(zadatak).start();
+        
     }
     
     public class PlayerTable{
@@ -288,7 +285,7 @@ public class RatingGUIController implements Initializable {
         public PlayerTable(String n, Double m)
         {
             Ime = new SimpleStringProperty(n); 
-            Rating = new SimpleDoubleProperty(m);;
+            Rating = new SimpleDoubleProperty(m);
         }
         public String getIme()
         {

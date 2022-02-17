@@ -10,9 +10,11 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 import org.javatuples.Pair;
 
@@ -39,36 +41,12 @@ public class RatingSystem {
         return ret;
     }
     
-    /*
-    public static void izdvojiLjude() throws FileNotFoundException, IOException{
-        File file = new File("tenis.txt");
-        Scanner sc = new Scanner(file);
-        HashSet<String> ljudi = new HashSet<>();
-        while(sc.hasNextLine()){
-            String tmp[] = sc.nextLine().split(" ");
-            if(tmp[0].equals("_contest:"))
-                continue;
-            ljudi.add(separiraj(tmp[0]));
-        }
-        Iterator it = ljudi.iterator();
-        String svi = "";
-        while(it.hasNext()){
-            String cur = it.next().toString();
-            System.out.println(cur);
-            svi += cur + "\n";
-        }
-        sc.close();
-        FileWriter fw = new FileWriter("tenisaci.txt");
-        fw.write(svi);
-        fw.close();
-    }
-    */
-    
-    public List<Event> readEvent(File file) throws SQLException, ClassNotFoundException{
+    public HashMap<String, Player> readEvent(File file) throws SQLException, ClassNotFoundException{
         //ucita evente, kalkulira dogadaje i mijenja rejtinge u bazi
         JavaSqlite baza = new JavaSqlite();
         List<Player> sviIgraci = null;
-        List<Event> ret = new ArrayList<Event>();
+        HashMap<String, Player> mapa = null;
+        //vratim mapu koja za string imePlayera sadrzi objekt player odgovarajuci
         try{
             sviIgraci = baza.SelectPlayers("SELECT * FROM Player WHERE player_id > 0");
             if(sviIgraci == null){
@@ -81,6 +59,14 @@ public class RatingSystem {
             Scanner reader = new Scanner(file);
             Event curEvent = null;
             int nPlayers = 0;
+            mapa = new HashMap<>();
+            if((int)sviIgraci.size() == 0){
+                System.out.println("nema igraca...");
+                return null;
+            }
+            for(int i = 0; i < (int)sviIgraci.size(); i++){
+                mapa.put(sviIgraci.get(i).getName(), sviIgraci.get(i));
+            }
             while(reader.hasNextLine()){
                 String tmp[] = reader.nextLine().split(" ");
                 if(tmp == null)
@@ -89,8 +75,12 @@ public class RatingSystem {
                     //dolazimo na novi contest, racunamo ratinge za stari
                     if(nPlayers > 0){
                         curEvent.calculate();
-                        curEvent.updateSql();
-                        ret.add(curEvent);
+                        ArrayList<Player> promjene = curEvent.getPlayerList();
+                        for(int j = 0; j < (int)promjene.size(); j++){
+                            String ime = promjene.get(j).getName();
+                            mapa.remove(ime);
+                            mapa.put(ime, promjene.get(j));
+                        }
                     }
                     nPlayers = 0;
                     curEvent = new Event(new ArrayList<>());
@@ -102,35 +92,33 @@ public class RatingSystem {
                     String playerId = tmp[0];
                     nPlayers++;
                     Player curPlayer = null;
-                    for(Player p : sviIgraci){
-                        if(p.getName().equals(playerId)){
-                            curPlayer = p;
-                            break;
-                        }
+                    if(mapa.containsKey(playerId)){
+                        curPlayer = mapa.get(playerId);
                     }
                     if(curPlayer != null)
                         curEvent.addPlayer(curPlayer, ranked);
                     else{
-                        //System.out.println("problem je sa" + playerId);
+                        System.out.println("problem je sa" + playerId);
                         throw new SQLException("igrac nije u bazi");
                     }
                 }
             }
             reader.close();
+            for(Player p : sviIgraci){
+                baza.UpdatePlayer(p);
+            }
         }catch(FileNotFoundException e){
             e.printStackTrace();
         }
         
-        return ret;
+        return mapa;
     }
     
     public static void main(String args[]) throws SQLException, ClassNotFoundException, IOException{
-        //ovo ne radi dok ne stavimo ljude u bazu (putem guia il rucno)
-        
         
         File file = new File("tenis.txt");
         if(file != null){
-            List<Event> tmp = new RatingSystem(1).readEvent(file);
+            HashMap<String, Player> tmp = new RatingSystem(1).readEvent(file);
         }
         
         /*
@@ -142,8 +130,5 @@ public class RatingSystem {
             }
         }
         */
-        
-        
-        //izdvojiLjude();
     }
 }
