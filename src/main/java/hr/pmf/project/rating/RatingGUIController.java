@@ -165,6 +165,11 @@ public class RatingGUIController implements Initializable {
     private void dogadajHandler(ActionEvent event) {
         if(stanjeIgraca == null){
             //nemoguc dogadaj, nemamo igrace u bazi!
+            brojIgraca.setText("");
+            Alert a = new Alert(AlertType.WARNING);
+            a.setTitle("Nema natjecatelja");
+            a.setHeaderText("Treba unijeti populaciju natjecatelja najprije");
+            a.show();        
             return;
         }
         try{
@@ -178,7 +183,13 @@ public class RatingGUIController implements Initializable {
             gotovDogadajButton.setDisable(true);
         }catch(Exception e){
             //ovdje baciti upozorenje
-            e.printStackTrace();
+            brojIgraca.setText("");
+            Alert a = new Alert(AlertType.WARNING);
+            a.setTitle("Krivi input!");
+            a.setHeaderText("Krivi input");
+            a.setContentText("Broj sudionika mora biti prirodan broj!");
+            a.show();
+            //e.printStackTrace();
         }
     }
     
@@ -188,15 +199,24 @@ public class RatingGUIController implements Initializable {
             int placeNum = Integer.parseInt(place.getText());
             String igrac = ID.getText();
             if(!stanjeIgraca.containsKey(igrac)){
-                //greska, mora biti u bazi, tj. mapi!
+                Alert a = new Alert(AlertType.WARNING);
+                a.setTitle("Krivi input!");
+                a.setContentText("Igrac ne postoji u bazi, unesite ponovo!");
+                a.show();
+                place.setText("");
+                ID.setText("");
                 return;
             }
             rucniEvent.add(new Pair(stanjeIgraca.get(igrac), placeNum));
             cntPlayers--;
         }
         catch(Exception e){
-            //ovdje isto izbaciti prozor
-            e.printStackTrace();
+            Alert a = new Alert(AlertType.WARNING);
+            a.setTitle("Krivi input!");
+            a.setHeaderText("Krivi input");
+            a.setContentText("Rank igraca mora biti prirodan broj");
+            a.show();
+           // e.printStackTrace();
         }
         if(cntPlayers == 0){
             unesiButton.setDisable(true);
@@ -222,6 +242,7 @@ public class RatingGUIController implements Initializable {
         }
         
         noviEvent.updateSql();
+        brojIgraca.setDisable(false);
         rucniEvent = null;
         updateButton.setDisable(true);
         ID.setDisable(false);
