@@ -23,9 +23,6 @@ public class Event {
         System.load(lib.getAbsolutePath());
     }
     
-    public static final double BETA = 200;
-    public static final double GAMMA = 80;
-    public static final double RHO = 1;
     public static final double SH = Math.sqrt(3) / Math.PI;
     public static final double MAX_LENGTH = 1000;
     
@@ -148,7 +145,8 @@ public class Event {
         player.getValue0().addM(p);
         player.getValue0().addD(Math.pow(player.getValue0().getSigma(), -2));
         player.getValue0().setMean(secondSolveZero(player.getValue0().getM(),
-                player.getValue0().getD(), player.getValue0().getMean(), BETA));
+                player.getValue0().getD(), player.getValue0().getMean(), 
+                ParameterOptimizer.BETA));
         player.getValue0().setSigma(
                 Math.pow(Math.pow(player.getValue0().getSigma(), -2) + 
                         Math.pow(player.getValue0().getSigma(), -2), -0.5));
@@ -172,7 +170,8 @@ public class Event {
     public static double cdfParameter(Player x, Player y){
         return (x.getMean() - y.getMean()) / 
                 (Math.sqrt(x.getSigma() * x.getSigma() +
-                y.getSigma() * y.getSigma() + 2 * BETA * BETA));
+                y.getSigma() * y.getSigma() + 2 * 
+                        ParameterOptimizer.BETA * ParameterOptimizer.BETA));
     }
             
     public static void main(String[] args){

@@ -16,8 +16,6 @@ import org.javatuples.Triplet;
  * @author jurica
  */
 public class CalculationJobPredict implements Callable<Void>{
-    final static int EPSILON = 30;
-    final static boolean DRAW = Boolean.FALSE;
     
     ArrayList<Pair<Double, Integer>> al = null;
     ArrayList<AtomicIntegerArray> rankings = null;
@@ -40,9 +38,10 @@ public class CalculationJobPredict implements Callable<Void>{
         int nPlayers = al.size(); 
         
         standardized.add(new Triplet(al.get(0).getValue0(), al.get(0).getValue1(), 1));
-        if(DRAW){
+        if(RatingGUIController.DRAW){
             for(int i = 1; i < nPlayers; i++){
-                if(al.get(i-1).getValue0() - al.get(i).getValue0() < EPSILON){
+                if(al.get(i-1).getValue0() - al.get(i).getValue0() 
+                        < ParameterOptimizer.EPSILON){
                     standardized.add(new Triplet(al.get(i).getValue0(), 
                             al.get(i).getValue1(), 
                             standardized.get(i-1).getValue2()));

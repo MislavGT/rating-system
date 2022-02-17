@@ -1,7 +1,6 @@
 /*
 package hr.pmf.project.rating;
 
-import static hr.pmf.project.rating.Event.BETA;
 import static hr.pmf.project.rating.Event.MAX_LENGTH;
 import java.io.File;
 import java.util.ArrayList;
@@ -38,7 +37,7 @@ public class CalculationUpdate implements Callable<Void>{
         player.getValue0().addM(p);
         player.getValue0().addD(Math.pow(player.getValue0().getSigma(), -2));
         player.getValue0().setMean(secondSolveZero(player.getValue0().getM(),
-                player.getValue0().getD(), player.getValue0().getMean(), BETA));
+                player.getValue0().getD(), player.getValue0().getMean(), ParameterOptimizer.BETA));
         player.getValue0().setSigma(
                 Math.pow(Math.pow(player.getValue0().getSigma(), -2) + 
                         Math.pow(player.getValue0().getSigma(), -2), -0.5));

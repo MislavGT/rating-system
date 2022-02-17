@@ -1,35 +1,32 @@
-/*
+
 package hr.pmf.project.rating;
 
+import java.util.ArrayList;
+
 public class ParameterOptimizer {
-    private double beta = 200;
-    private double gamma = 80;
-    private double rho = 1;
-    private boolean DRAW = Boolean.TRUE;
-    private double epsilon = 0;
+    public static double BETA = 200;
+    public static double GAMMA = 80;
+    public static double RHO = 1;
+    public static double EPSILON = 35;
     
-    public ParameterOptimizer(RatingSystem sys){
-        this.DRAW = sys.Drawable();
-    }
-    
-    public double optimizeBeta(){
+    public ParameterOptimizer(Event event){
         
-    }
-    
-    public double optimizeGamma(){
-        
-    }
-    
-    public double optimizeEpsilon(){
-        
-    }
-    
-    public void optimize(){
-        optimizeBeta
-        optimizeGamma
-        if(DRAW){
-            optimizeEpsilon
+        PredictionFitness X;
+        ArrayList<Double> probs = new ArrayList<>();
+        BETA *= 0.9;
+        GAMMA *= 0.9;
+        EPSILON *= 0.9;
+        X = new PredictionFitness(event);
+        probs.add(X.getFitness());
+        BETA *= 1.22;
+        GAMMA *= 1.22;
+        EPSILON *= 1.22;
+        X = new PredictionFitness(event);
+        probs.add(X.getFitness());
+        if(probs.get(0) > probs.get(1)){
+            BETA /= 1.22;
+            GAMMA /= 1.22;
+            EPSILON /= 1.22;
         }
     }
 }
-*/

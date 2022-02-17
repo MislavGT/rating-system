@@ -51,7 +51,7 @@ public class PredictEvent {
         for(int i = 0; i < nPlayers; i++){
             //za svakog igraca uzmem 10_000 sampleova iz logisticke distribucije
             double curMean = players.get(i).getMean();
-            double curSigma = Event.hyp(players.get(i).getSigma(), Event.BETA) *
+            double curSigma = Event.hyp(players.get(i).getSigma(), ParameterOptimizer.BETA) *
                     Event.SH;
            
             LogisticDistribution ld = new LogisticDistribution(curMean, curSigma);

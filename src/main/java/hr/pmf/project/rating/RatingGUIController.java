@@ -238,6 +238,7 @@ public class RatingGUIController implements Initializable {
         }
         PredictionOutput.draw(tmp);
         Event noviEvent = new Event(rucniEvent);
+        ParameterOptimizer optimize = new ParameterOptimizer(noviEvent);
         noviEvent.calculate();
         ArrayList<Player> promjene = noviEvent.getPlayerList();
         for(int i = 0; i < promjene.size(); i++){

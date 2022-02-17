@@ -58,7 +58,7 @@ public class JavaSqliteTest {
         Event evt = new Event(for_evt);
         List<Event> events = app.SelectEvents("SELECT * FROM Event");
         int result = events.size();
-        int expResult = 0;
+        int expResult = 8;
         assertEquals(expResult, result);
     }
 }
