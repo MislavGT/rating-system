@@ -29,21 +29,21 @@ public class PredictionOutput{
         
         String line = new String();
         
-        text.append("#\t");
+        text.append("\t#\t");
         
-        for(int i = 0; i < players.size(); i++){
+        for(int i = 1; i < players.size() + 1; i++){
             text.append(String.valueOf(i) + "\t");
         }
         
         text.append("\n");
         
         for(int i = 0; i < players.size(); i++){
-            text.append(players.get(i).getName() + "\t");
+            text.append(players.get(i).getName() + "\t\t");
             line = matr.get(i).stream().map(Object::toString)
                         .collect(Collectors.joining("\t"));
             text.append(line + "\n");
         }
-        
+        text.append("\t");
         players.forEach(_item -> {
             text.append("\t" + "%");
         });

@@ -16,8 +16,8 @@ import org.javatuples.Triplet;
  * @author jurica
  */
 public class CalculationJobPredict implements Callable<Void>{
-    final static int EPSILON = 100;
-    final static boolean DRAW = Boolean.TRUE;
+    final static int EPSILON = 30;
+    final static boolean DRAW = Boolean.FALSE;
     
     ArrayList<Pair<Double, Integer>> al = null;
     ArrayList<AtomicIntegerArray> rankings = null;

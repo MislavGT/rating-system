@@ -15,6 +15,8 @@ import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicIntegerArray;
 import org.apache.commons.math3.distribution.LogisticDistribution;
 import org.javatuples.Pair;
+import java.math.RoundingMode;
+import java.math.BigDecimal;
 
 /**
  *
@@ -97,13 +99,21 @@ public class PredictEvent {
         for(int i = 0; i < nPlayers; i++){
             ArrayList<Double> cur = new ArrayList<>();
             for(int j = 0; j < nPlayers; j++){
-                cur.add((double)rankings.get(i).get(j) / (double)ITER_CNT);
+                cur.add(round(100*(double)rankings.get(i).get(j) / 
+                        (double)ITER_CNT, 2));
             }
             freq.add(cur);
         }
         return freq;
     }
-   
+    
+    public static double round(double value, int places) {
+        if (places < 0) throw new IllegalArgumentException();
+
+        BigDecimal bd = BigDecimal.valueOf(value);
+        bd = bd.setScale(places, RoundingMode.HALF_UP);
+        return bd.doubleValue();
+    }
     
     public static void main(String args[]){
         ArrayList<Player> testna = new ArrayList<>();

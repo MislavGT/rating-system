@@ -24,7 +24,7 @@ public class Event {
     }
     
     public static final double BETA = 200;
-    public static final double GAMMA = 35;
+    public static final double GAMMA = 80;
     public static final double RHO = 1;
     public static final double SH = Math.sqrt(3) / Math.PI;
     public static final double MAX_LENGTH = 1000;
