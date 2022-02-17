@@ -82,6 +82,9 @@ public class RatingGUIController implements Initializable {
     ObservableList<PlayerTable> data = FXCollections.observableArrayList();
     JavaSqlite App;
     HashMap<String, Player> stanjeIgraca = null;
+    int dataType = 0;
+    int cntPlayers; //u rucnom eventu
+    ArrayList<Pair<Player, Integer>> rucniEvent;
     
     /**
      * Initializes the controller class.
@@ -98,7 +101,7 @@ public class RatingGUIController implements Initializable {
             } catch (SQLException ex) {
                 Logger.getLogger(RatingGUIController.class.getName()).log(Level.SEVERE, null, ex);
             }
-            brojIgraca.setDisable(true);
+            brojIgraca.setDisable(false);
             ID.setDisable(true);
             place.setDisable(true);
             updateButton.setDisable(true);
@@ -157,97 +160,78 @@ public class RatingGUIController implements Initializable {
 
     @FXML
     private void dogadajHandler(ActionEvent event) {
-        brojIgraca.setDisable(false);
-        ID.setDisable(false);
-        place.setDisable(false);
-        unesiButton.setDisable(false);
+        if(stanjeIgraca == null){
+            //nemoguc dogadaj, nemamo igrace u bazi!
+            return;
+        }
+        try{
+            cntPlayers = Integer.parseInt(brojIgraca.getText());
+            brojIgraca.setText("");
+            brojIgraca.setDisable(true);
+            ID.setDisable(false);
+            place.setDisable(false);
+            unesiButton.setDisable(false);
+            rucniEvent = new ArrayList<Pair<Player, Integer>>();
+            gotovDogadajButton.setDisable(true);
+        }catch(Exception e){
+            //ovdje baciti upozorenje
+            e.printStackTrace();
+        }
     }
-    boolean check = true;
-    int brojac = 0;
+    
     @FXML
     private void unesiHandler(ActionEvent event) throws ClassNotFoundException, SQLException {
-        boolean integerCheck = true;
-        int placeNum = 0;
-        int idNum = 0;
-        int brIgraca = 0;
         try{        
-            placeNum = Integer.parseInt(place.getText());
-            idNum = Integer.parseInt(ID.getText());
-            brIgraca = Integer.parseInt(brojIgraca.getText());
-        }
-        catch(Exception e)
-        {
-            integerCheck = false;
-        }
-        if(integerCheck && placeNum > 0 && idNum > 0 && brIgraca > 0)
-        {
-            if(check)
-                brojac = brIgraca;
-        
-            List<Player> playerWithId = App.SelectPlayers("SELECT * FROM Player WHERE player_id = " + idNum + ";");
-            System.out.println("Ime: " + playerWithId.get(0).getName() + ", mjesto: " + placeNum);
-            players.add(new Pair(playerWithId.get(0),placeNum));
-            check = false;
-            brojac--;
-            ID.deleteText(0,ID.getLength());
-            place.deleteText(0,place.getLength());
-            for(Pair<Player, Integer> item : players )
-                System.out.println("Ime: "+ item.getValue0().getName() + ", mjesto: " + item.getValue1());
-        
-            if(brojac == 0)
-            {
-                brojIgraca.deleteText(0, brojIgraca.getLength());
-                brojIgraca.setDisable(true);
-                ID.setDisable(true);
-                place.setDisable(true);
-                unesiButton.setDisable(true);
-
-                updateButton.setDisable(false);
-                Event evnt = new Event(players);
-                eventsInProgress.add(evnt);
-                App.InsertEvent(evnt);
-                players.clear();
-                check = true;
+            int placeNum = Integer.parseInt(place.getText());
+            String igrac = ID.getText();
+            if(!stanjeIgraca.containsKey(igrac)){
+                //greska, mora biti u bazi, tj. mapi!
+                return;
             }
+            rucniEvent.add(new Pair(stanjeIgraca.get(igrac), placeNum));
+            cntPlayers--;
         }
-        else
-        {
-            Alert alert = new Alert(AlertType.WARNING);
-            alert.setTitle("Warning!");
-            alert.setHeaderText("Krivi unos podataka");
-            alert.setContentText("Broj igrača, ID i mjesto moraju biti prirodni brojevi");
-            brojIgraca.setDisable(true);
-            ID.setDisable(true);
-            place.setDisable(true);
-            updateButton.setDisable(true);
+        catch(Exception e){
+            //ovdje isto izbaciti prozor
+            e.printStackTrace();
+        }
+        if(cntPlayers == 0){
             unesiButton.setDisable(true);
-            ID.deleteText(0,ID.getLength());
-            place.deleteText(0,place.getLength());
-            brojIgraca.deleteText(0, brojIgraca.getLength());
-            alert.showAndWait();
+            updateButton.setDisable(false);
         }
-        
+        place.setText("");
+        ID.setText("");
     }
     @FXML
-    private void updateHandler(ActionEvent event) throws ClassNotFoundException
-    {
-        Event notProcessedEvent = eventsInProgress.peek();
-        notProcessedEvent.calculate();
-        notProcessedEvent.updateSql();
-        for(Player plyr : notProcessedEvent.getPlayerList())
-        {
-            for(PlayerTable plTable : tablica.getItems())
-            {
-                if(plyr.getName().equals(plTable.getIme()))
-                {
-                        plTable.setRating(plyr.getMean());
-                        break;
-                }
-            }
+    private void updateHandler(ActionEvent event) throws ClassNotFoundException{
+        //ovdje je ustvari PREDIKCIJA
+        ArrayList<Player> tmp = new ArrayList<>();
+        for(int j = 0; j < (int)rucniEvent.size(); j++){
+            tmp.add(rucniEvent.get(j).getValue0());
         }
-        eventsInProgress.remove();
-        if(eventsInProgress.size() == 0)
-            updateButton.setDisable(true);
+        PredictionOutput.draw(tmp);
+        Event noviEvent = new Event(rucniEvent);
+        noviEvent.calculate();
+        ArrayList<Player> promjene = noviEvent.getPlayerList();
+        for(int i = 0; i < promjene.size(); i++){
+            stanjeIgraca.remove(promjene.get(i).getName());
+            stanjeIgraca.put(promjene.get(i).getName(), promjene.get(i));
+        }
+        
+        noviEvent.updateSql();
+        rucniEvent = null;
+        updateButton.setDisable(true);
+        ID.setDisable(false);
+        refresajTablicu();
+        gotovDogadajButton.setDisable(false);
+    }
+    
+    public void refresajTablicu(){
+        for(PlayerTable plTable : tablica.getItems()){
+            Player novaVerzija = stanjeIgraca.get(plTable.getIme());
+            plTable.setRating(novaVerzija.getMean());
+        }
+        tablica.refresh();
     }
     
     @FXML
@@ -293,6 +277,7 @@ public class RatingGUIController implements Initializable {
             public Void call() throws Exception {
                 try{
                     int flag = (odabrana.getName().charAt(0) == 't') ? 1 : 0;
+                    dataType = flag;
                     String cijela = "", linija = "";
                     Path p = Paths.get(odabrana.getAbsolutePath());
                     BufferedReader citac = Files.newBufferedReader(p, StandardCharsets.UTF_8);

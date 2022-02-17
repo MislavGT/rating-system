@@ -8,8 +8,9 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="hr.pmf.project.rating.RatingGUIController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="hr.pmf.project.rating.RatingGUIController">
    <children>
       <Button layoutX="336.0" layoutY="344.0" mnemonicParsing="false" onAction="#datasetHandler" prefHeight="25.0" prefWidth="165.0" text="Unesi početni dataset" />
       <TableView fx:id="tablica" layoutX="228.0" layoutY="29.0" prefHeight="308.0" prefWidth="366.0">
@@ -27,15 +28,21 @@
                   <TextField fx:id="place" layoutX="128.0" layoutY="99.0" prefHeight="25.0" prefWidth="69.0" />
                   <Label layoutX="143.0" layoutY="82.0" prefHeight="17.0" prefWidth="47.0" text="Mjesto" />
                   <Label layoutX="56.0" layoutY="82.0" prefHeight="17.0" prefWidth="18.0" text="ID" />
-                  <TextField fx:id="brojIgraca" layoutX="108.0" layoutY="47.0" prefHeight="17.0" prefWidth="69.0" />
-                  <Label layoutX="40.0" layoutY="47.0" prefHeight="25.0" prefWidth="69.0" text="Broj igrača:" />
-                  <Button layoutX="40.0" layoutY="14.0" mnemonicParsing="false" onAction="#dogadajHandler" prefHeight="25.0" prefWidth="147.0" text="Novi događaj" />
-                  <Button fx:id="gotovDogadajButton" layoutX="17.0" layoutY="210.0" onAction="#gotovDogadajHandler" mnemonicParsing="false" prefHeight="26.0" prefWidth="202.0" text="Unesi gotov događaj" />
+                  <TextField fx:id="brojIgraca" layoutX="128.0" layoutY="48.0" prefHeight="17.0" prefWidth="69.0" />
+                  <Label layoutX="28.0" layoutY="49.0" prefHeight="25.0" prefWidth="78.0" text="Broj igrača:" />
+                  <Button fx:id="noviEventGumb" layoutX="40.0" layoutY="14.0" mnemonicParsing="false" onAction="#dogadajHandler" prefHeight="25.0" prefWidth="147.0" text="Novi događaj" />
+                  <Button fx:id="updateButton" layoutX="40.0" layoutY="183.0" mnemonicParsing="false" onAction="#updateHandler" prefHeight="51.0" prefWidth="147.0" text="Predikcija i igra">
+                     <font>
+                        <Font size="12.0" />
+                     </font></Button>
                </children>
             </AnchorPane>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="127.0" prefWidth="228.0">
                <children>
-                  <Button fx:id="updateButton" layoutX="59.0" layoutY="30.0" mnemonicParsing="false" onAction="#updateHandler" prefHeight="76.0" prefWidth="110.0" text="UPDATE TABLE" />
+                  <Button fx:id="gotovDogadajButton" layoutX="31.0" layoutY="37.0" mnemonicParsing="false" onAction="#gotovDogadajHandler" prefHeight="60.0" prefWidth="165.0" text="Događaj iz datoteke">
+                     <font>
+                        <Font size="11.0" />
+                     </font></Button>
                </children>
             </AnchorPane>
         </items>
