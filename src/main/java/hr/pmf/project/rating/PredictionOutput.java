@@ -17,7 +17,7 @@ public class PredictionOutput{
 
         JPanel panel = new JPanel();
 
-        JTextArea text = new JTextArea();
+        JTextArea text = new JTextArea(10, 30);
         
         PredictEvent prediction = new PredictEvent(players);
         

@@ -13,23 +13,29 @@ double shorthand(double x){
     return x*sqrt(3)/M_PI;
 }
 
+double interval(double a, double x, double y){
+    if(a < x) return x;
+    if(a > y) return y;
+    return a;
+}
+
 double newtonMethod(double mean, double (*func)(double), double (*der)(double)){
-    int i = 0;
-    double x = mean;
-    double y = x - (func(x) / der(x));
-    while(abs(x - y) > EPSILON && i < 10000){
-        x = y;
+    double lo = -3000; double hi = 6000;
+    double x = (lo + hi)/2;
+    double y;
+    while(lo < x && hi > x){
         y = x - (func(x) / der(x));
-        if(y < -6000 || y > 9000){
-            return x;
+        if(y < x){
+            hi = x;
+            x = interval(y, hi - 0.75 * (hi - lo), hi);
         }
-        i++;
+        else{
+            lo = x;
+            x = interval(y, lo, lo + 0.75 * (hi - lo));
+        }
     }
-    if(i == 10000){
-        /* Possible Newton fail. */
-        printf("Newton");
-    }
-    return y;
+    if(func(x) > EPSILON) printf("Newton");
+    return x;
 }
 
 double firstFunction(double x){
@@ -49,7 +55,7 @@ double firstFunctionDerivative(double x){
     double sum = 0;
     for(int i = 0; i < length; i++){
         sum += (1 / (2 * shorthand(deltas[i]) * deltas[i]
-                * pow(cosh((priorMeans[i] - x)/(2*shorthand(deltas[i]))), 2)));
+                * pow(cosh((x - priorMeans[i])/(2*shorthand(deltas[i]))), 2)));
     }
     return sum;
 }
@@ -67,7 +73,7 @@ double secondFunctionDerivative(double x){
     double sum = d[0];
     for(int i = 1; i < length; i++){
         sum += ((d[i] * pow(parameter, 2)) / (2 * pow(shorthand(parameter), 2)
-            * pow(cosh((m[i] - x) / (2 * shorthand(parameter))), 2)));
+            * pow(cosh((x - m[i]) / (2 * shorthand(parameter))), 2)));
     }
     return sum;
 }
