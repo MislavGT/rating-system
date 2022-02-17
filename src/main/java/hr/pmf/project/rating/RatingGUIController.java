@@ -45,6 +45,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
 import javafx.concurrent.Task ;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableRow;
@@ -56,7 +57,8 @@ import javax.swing.text.PlainDocument;
  * @author matij
  */
 public class RatingGUIController implements Initializable {
-    
+    @FXML
+    CheckBox drawFlag;
     @FXML
     private ProgressBar progressBar;
     @FXML
@@ -78,6 +80,8 @@ public class RatingGUIController implements Initializable {
     @FXML
     public TableColumn<PlayerTable, Double> rating;
     TableView tablicaCopy;
+    
+    public static boolean DRAW = false;
     
     FileChooser odabirDatoteka;
     ArrayList<Pair<Player,Integer>> players = new ArrayList<>();
@@ -247,7 +251,20 @@ public class RatingGUIController implements Initializable {
         updateButton.setDisable(true);
         ID.setDisable(false);
         refresajTablicu();
+        if(drawFlag.isSelected())
+            drawFlag.setSelected(false);
         gotovDogadajButton.setDisable(false);
+    }
+    
+    @FXML
+    public void handleCheck(ActionEvent event){
+        if(drawFlag.isSelected()){
+            DRAW = true;
+           // System.out.println("sada si chekiran");
+        }else{
+            DRAW = false;
+         //   System.out.println("sada nisi checkiran");
+        }
     }
     
     public void refresajTablicu(){
