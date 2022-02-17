@@ -21,9 +21,11 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
 import org.javatuples.Pair;
 import java.util.Queue;
 import java.util.logging.Level;
@@ -43,6 +45,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
 import javafx.concurrent.Task ;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableRow;
 import javax.swing.text.PlainDocument;
 
@@ -74,11 +77,12 @@ public class RatingGUIController implements Initializable {
     TableView tablicaCopy;
     
     FileChooser odabirDatoteka;
-    ArrayList<Pair<Player,Integer>> players = new ArrayList<Pair<Player,Integer>>();
+    ArrayList<Pair<Player,Integer>> players = new ArrayList<>();
     Queue<Event> eventsInProgress = new LinkedList<>();
     ObservableList<PlayerTable> data = FXCollections.observableArrayList();
     JavaSqlite App;
-
+    HashMap<String, Player> stanjeIgraca = null;
+    
     /**
      * Initializes the controller class.
      */
@@ -105,21 +109,46 @@ public class RatingGUIController implements Initializable {
             ime.setCellValueFactory(new PropertyValueFactory<>("Ime"));
             rating.setCellValueFactory(new PropertyValueFactory<>("Rating"));
             tablica.setItems(data);
+            stanjeIgraca = new HashMap<>();
             
             tablica.setRowFactory(tv -> {;
                 TableRow<PlayerTable> row = new TableRow<PlayerTable>();
                 row.setOnMouseClicked(event -> {
                     if(event.getClickCount() == 2 && (!row.isEmpty())){
                         PlayerTable tmp = row.getItem();
+                        Task<Void> zadatak = new Task<Void>(){
+                            @Override
+                            public Void call(){
+                                Player odabraniPlayer = stanjeIgraca.get(tmp.getIme());
+                                Chart dijagram = new Chart(tmp.getIme(), odabraniPlayer.getM());
+                                dijagram.draw();
+                                return null;
+                            }
+                        };
                         
-                        System.out.println("igrac je " + tmp.getIme());
+                        new Thread(zadatak).start();
+                        
+                        //System.out.println("igrac je " + tmp.getIme());
                     }
                 });
                 return row;
             });
             
-            
-            
+            rating.setCellFactory(tc -> new TableCell<PlayerTable, Double>(){
+                @Override
+                protected void updateItem(Double value, boolean empty){
+                    super.updateItem(value, empty);
+                    if(empty){
+                        setText(null);
+                    }else{
+                        int tmp = value.intValue();
+                        setText(String.format("%d", tmp));
+                    }
+                
+                }
+                
+                
+            });
             
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(RatingGUIController.class.getName()).log(Level.SEVERE, null, ex);
@@ -225,6 +254,8 @@ public class RatingGUIController implements Initializable {
     private void gotovDogadajHandler(ActionEvent event) throws SQLException, ClassNotFoundException
     {
         File odabrana = odabirDatoteka.showOpenDialog(new Stage());
+        if(odabrana == null)
+            return;
         String imeDatoteke = odabrana.getName();
         int flag = (imeDatoteke.charAt(0) == 't') ? 1 : 0; 
         Task<Void> zadatak = new Task<Void>(){
@@ -238,6 +269,12 @@ public class RatingGUIController implements Initializable {
                     Player novaVerzija = promjene.get(plTable.getIme());
                     plTable.setRating(novaVerzija.getMean());
                 }
+                tablica.refresh();
+                for(Map.Entry<String, Player> entry : promjene.entrySet()){
+                    if(stanjeIgraca.containsKey(entry.getKey()))
+                        stanjeIgraca.remove(entry.getKey());
+                    stanjeIgraca.put(entry.getKey(), entry.getValue());
+                }
                 return null;
             }
         };
@@ -246,13 +283,16 @@ public class RatingGUIController implements Initializable {
     }
     
     @FXML
-    private void datasetHandler(ActionEvent event)
+    private void datasetHandler(ActionEvent event) throws InterruptedException
     {
         File odabrana = odabirDatoteka.showOpenDialog(new Stage());
+        if(odabrana == null)
+            return;
         Task zadatak = new Task<Void>(){
             @Override
             public Void call() throws Exception {
                 try{
+                    int flag = (odabrana.getName().charAt(0) == 't') ? 1 : 0;
                     String cijela = "", linija = "";
                     Path p = Paths.get(odabrana.getAbsolutePath());
                     BufferedReader citac = Files.newBufferedReader(p, StandardCharsets.UTF_8);
@@ -263,9 +303,12 @@ public class RatingGUIController implements Initializable {
                         ArrayList<Double> m_list = new ArrayList<Double>();
                         ArrayList<Double> d_list = new ArrayList<Double>();
                         m_list.add(1500.);
-                        d_list.add(Double.valueOf(1)/Double.valueOf(350*350));
-                        Player forDatabase = new Player("",1500.,350.,linija,m_list,d_list);
+                        d_list.add(1.0 / (350d * 350d));
+                        Player forDatabase = new Player(linija,1500.,350.,linija,m_list,d_list);
                         App.InsertPlayer(forDatabase);
+                        if(stanjeIgraca.containsKey(linija))
+                            stanjeIgraca.remove(linija);
+                        stanjeIgraca.put(linija, forDatabase);
                         data.add(new PlayerTable(linija, 1500.));
                     }
         
@@ -274,8 +317,8 @@ public class RatingGUIController implements Initializable {
                 return null;}
         };
         
-        new Thread(zadatak).start();
-        
+        Thread th = new Thread(zadatak);
+        th.start();
     }
     
     public class PlayerTable{
