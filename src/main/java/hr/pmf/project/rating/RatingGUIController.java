@@ -45,6 +45,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
 import javafx.concurrent.Task ;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableRow;
 import javax.swing.text.PlainDocument;
@@ -55,7 +56,9 @@ import javax.swing.text.PlainDocument;
  * @author matij
  */
 public class RatingGUIController implements Initializable {
-
+    
+    @FXML
+    private ProgressBar progressBar;
     @FXML
     private TextField brojIgraca;
     @FXML
@@ -259,11 +262,12 @@ public class RatingGUIController implements Initializable {
                         stanjeIgraca.remove(entry.getKey());
                     stanjeIgraca.put(entry.getKey(), entry.getValue());
                 }
+                updateProgress(1, 1);
                 return null;
             }
         };
+        progressBar.progressProperty().bind(zadatak.progressProperty());
         new Thread(zadatak).start();
-        //tablica.setItems(tablica.getItems());
     }
     
     @FXML
@@ -296,14 +300,16 @@ public class RatingGUIController implements Initializable {
                         stanjeIgraca.put(linija, forDatabase);
                         data.add(new PlayerTable(linija, 1500.));
                     }
-        
+                    updateProgress(1, 1);
                 }
-                catch(Exception e){}
-                return null;}
+                catch(Exception e){
+                    return null;
+                }
+                return null;
+            }
         };
-        
-        Thread th = new Thread(zadatak);
-        th.start();
+        progressBar.progressProperty().bind(zadatak.progressProperty());
+        new Thread(zadatak).start();
     }
     
     public class PlayerTable{
