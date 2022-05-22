@@ -1,7 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package hr.pmf.project.rating;
 
 import java.io.File;
@@ -18,10 +15,7 @@ import java.util.Map;
 import java.util.Scanner;
 import org.javatuples.Pair;
 
-/**
- *
- * @author jurica
- */
+
 public class RatingSystem {
     final int eventType;
     //0 - codeforces
@@ -74,6 +68,20 @@ public class RatingSystem {
                 if(tmp[0].equals("_contest:")){
                     //dolazimo na novi contest, racunamo ratinge za stari
                     if(nPlayers > 0){
+                        /**
+                        boolean flagFitness = Boolean.TRUE;
+                        ArrayList<Player> playerList = curEvent.getPlayerList();
+                        for(int i = 0; i < playerList.size(); i++){
+                            if(playerList.get(i).getD().size() < 10){
+                                flagFitness = Boolean.FALSE;
+                            }
+                        }
+                        PredictionFitness fitnessP;
+                        if(flagFitness){
+                            fitnessP = new PredictionFitness(curEvent);
+                            ParameterOptimizer.FITNESS += fitnessP.getFitness();
+                        }
+                        */
                         curEvent.calculate();
                         ArrayList<Player> promjene = curEvent.getPlayerList();
                         for(int j = 0; j < (int)promjene.size(); j++){
@@ -110,7 +118,7 @@ public class RatingSystem {
         }catch(FileNotFoundException e){
             e.printStackTrace();
         }
-        
+        System.out.println(ParameterOptimizer.FITNESS);
         return mapa;
     }
     

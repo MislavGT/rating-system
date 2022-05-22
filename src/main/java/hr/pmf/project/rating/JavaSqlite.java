@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package hr.pmf.project.rating;
 
 import com.google.gson.Gson;
@@ -20,14 +16,9 @@ import java.util.Collection;
 import org.javatuples.Pair;
 
 
-/**
- *
- * @author matij
- */
 public class JavaSqlite {
     
     public static void main(String[] args) throws ClassNotFoundException, SQLException {
-        // TODO code application logic here
         JavaSqlite app = new JavaSqlite();
         ArrayList<Double> first = new ArrayList<Double>();
         first.add(2.0);

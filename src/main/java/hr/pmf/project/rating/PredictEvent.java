@@ -1,7 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package hr.pmf.project.rating;
 
 import java.text.DecimalFormat;
@@ -18,10 +15,7 @@ import org.javatuples.Pair;
 import java.math.RoundingMode;
 import java.math.BigDecimal;
 
-/**
- *
- * @author jurica
- */
+
 public class PredictEvent {
     final static int ITER_CNT = 10_000;
     final static int THREAD_POOL_SIZE = 7;

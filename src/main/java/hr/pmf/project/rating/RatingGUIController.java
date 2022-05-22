@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package hr.pmf.project.rating;
 
 import java.net.URL;
@@ -51,11 +47,7 @@ import javafx.scene.control.TableCell;
 import javafx.scene.control.TableRow;
 import javax.swing.text.PlainDocument;
 
-/**
- * FXML Controller class
- *
- * @author matij
- */
+
 public class RatingGUIController implements Initializable {
     @FXML
     CheckBox drawFlag;
@@ -238,7 +230,6 @@ public class RatingGUIController implements Initializable {
         }
         PredictionOutput.draw(tmp);
         Event noviEvent = new Event(rucniEvent);
-        ParameterOptimizer optimize = new ParameterOptimizer(noviEvent);
         noviEvent.calculate();
         ArrayList<Player> promjene = noviEvent.getPlayerList();
         for(int i = 0; i < promjene.size(); i++){
