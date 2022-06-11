@@ -143,13 +143,13 @@ public class Event {
         double p = firstSolveZero(player.getValue1(), deltas, priorMeans, 
                 placements, player.getValue0().getMean());
         player.getValue0().addM(p);
-        player.getValue0().addD(Math.pow(player.getValue0().getSigma(), -2));
+        player.getValue0().addD(Math.pow(ParameterOptimizer.BETA, -2));
         player.getValue0().setMean(secondSolveZero(player.getValue0().getM(),
                 player.getValue0().getD(), player.getValue0().getMean(), 
                 ParameterOptimizer.BETA));
         player.getValue0().setSigma(
                 Math.pow(Math.pow(player.getValue0().getSigma(), -2) + 
-                        Math.pow(player.getValue0().getSigma(), -2), -0.5));
+                        Math.pow(ParameterOptimizer.BETA, -2), -0.5));
         if(player.getValue0().getD().size() > MAX_LENGTH){
             player.getValue0().getD().remove(0);
             player.getValue0().getM().remove(0);
